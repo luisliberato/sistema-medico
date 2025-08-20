@@ -2326,72 +2326,7 @@
 
         console.log('TuCliniCard System initialized successfully');
 
-      
-async function showTodayAppointments() {
-    if (!currentUser || userType !== 'doctor') return;
-    
-    openModal('today-appointments');
-    showLoading();
-    
-    try {
-        const today = new Date().toISOString().split('T')[0];
-        const { data: appointments, error } = await supabase
-            .from('appointments')
-            .select(`
-                *,
-                patients (name, phone, email)
-            `)
-            .eq('doctor_id', currentUser.id)
-            .eq('appointment_date', today)
-            .order('appointment_time', { ascending: true });
         
-        if (error) throw error;
-        
-        const listContainer = document.getElementById('today-appointments-list');
-        
-        if (appointments.length === 0) {
-            listContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem;">
-                    <i class="fas fa-calendar-check" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
-                    <h3>No hay citas programadas para hoy</h3>
-                    <p>¡Perfecto! Puedes aprovechar para revisar expedientes.</p>
-                </div>
-            `;
-        } else {
-            listContainer.innerHTML = `
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Hora</th>
-                                <th>Paciente</th>
-                                <th>Teléfono</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${appointments.map(apt => `
-                                <tr>
-                                    <td><strong>${apt.appointment_time}</strong></td>
-                                    <td>${apt.patients?.name || 'Sin nombre'}</td>
-                                    <td>${apt.patients?.phone || 'Sin teléfono'}</td>
-                                    <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Error al cargar agenda del día', 'error');
-    } finally {
-        hideLoading();
-    }
-}   
-    
 
     // Agregar estas funciones que faltan:
 
@@ -2692,6 +2627,22 @@ function confirmCompleteAppointment(appointmentId) {
         updateAppointmentStatus(appointmentId, 'completed');
     }
 }
+
+// Funciones que faltan para los botones de Gestionar Pacientes:
+
+async function viewPatientHistory(patientId) {
+    showNotification('Función en desarrollo: Ver historial completo del paciente', 'info');
+    // Aquí después implementaremos el historial médico completo
+}
+
+function createAppointmentForPatient(patientId, patientName) {
+    showNotification(`Función pendiente: Crear cita para ${patientName}`, 'info');
+    closeModal('patients-list');
+    
+    // Opcional: abrir modal de cita pre-llenado
+    // openModal('appointment');
+}
+
           </script>
 </body>
 </html>
