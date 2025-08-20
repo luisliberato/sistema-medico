@@ -2494,11 +2494,42 @@ async function showPatientsList() {
         
         if (allPatients.length === 0) {
             listContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem;">
-                    <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
-                    <h3>Aún no hay pacientes registrados</h3>
-                </div>
-            `;
+              <div style="width: 100%; overflow-x: auto; overflow-y: visible;">
+        <table style="width: 1000px; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--light-bg);">
+                    <th style="width: 200px; padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Nombre</th>
+                    <th style="width: 150px; padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Teléfono</th>
+                    <th style="width: 200px; padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Email</th>
+                    <th style="width: 100px; padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Edad</th>
+                    <th style="width: 100px; padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Estado</th>
+                    <th style="width: 250px; padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${allPatients.map(patient => `
+                    <tr>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;"><strong>${patient.name}</strong></td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">${patient.phone}</td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">${patient.email || 'No registrado'}</td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+                            <span class="status-badge status-confirmed" style="font-size: 0.8rem;">Activo</span>
+                        </td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+                            <button class="btn btn-primary" onclick="viewPatientHistory('${patient.id}')" style="padding: 0.4rem 0.8rem; margin-right: 0.5rem; font-size: 0.8rem;">
+                                <i class="fas fa-eye"></i> Ver Historial
+                            </button>
+                            <button class="btn btn-success" onclick="createAppointmentForPatient('${patient.id}', '${patient.name}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                <i class="fas fa-calendar-plus"></i> Nueva Cita
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+`;
         } else {
             listContainer.innerHTML = `
                 <div style="overflow-x: scroll; overflow-y: visible; width: 100%; border: 1px solid #e5e7eb; border-radius: 8px;">
@@ -2631,16 +2662,157 @@ function confirmCompleteAppointment(appointmentId) {
 // Funciones que faltan para los botones de Gestionar Pacientes:
 
 async function viewPatientHistory(patientId) {
-    showNotification('Función en desarrollo: Ver historial completo del paciente', 'info');
-    // Aquí después implementaremos el historial médico completo
-}
-
-function createAppointmentForPatient(patientId, patientName) {
-    showNotification(`Función pendiente: Crear cita para ${patientName}`, 'info');
-    closeModal('patients-list');
+    // Crear modal de historial si no existe
+    let modal = document.getElementById('patient-history');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'patient-history';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 90vw; width: 1200px;">
+                <span class="close" onclick="closeModal('patient-history')">&times;</span>
+                <div id="patient-history-content">
+                    <p>Cargando historial del paciente...</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
     
-    // Opcional: abrir modal de cita pre-llenado
-    // openModal('appointment');
+    openModal('patient-history');
+    showLoading();
+    
+    try {
+        // Cargar datos del paciente
+        const { data: patient, error: patientError } = await supabase
+            .from('patients')
+            .select('*')
+            .eq('id', patientId)
+            .single();
+        
+        if (patientError) throw patientError;
+        
+        // Cargar citas del paciente
+        const { data: appointments, error: appointmentsError } = await supabase
+            .from('appointments')
+            .select(`
+                *,
+                doctors (name, specialty)
+            `)
+            .eq('patient_id', patientId)
+            .order('appointment_date', { ascending: false });
+        
+        if (appointmentsError) throw appointmentsError;
+        
+        // Cargar expediente médico
+        const { data: records, error: recordsError } = await supabase
+            .from('medical_records')
+            .select(`
+                *,
+                doctors (name, specialty)
+            `)
+            .eq('patient_id', patientId)
+            .order('visit_date', { ascending: false });
+        
+        if (recordsError) throw recordsError;
+        
+        // Mostrar historial completo
+        const historyContent = document.getElementById('patient-history-content');
+        historyContent.innerHTML = `
+            <h2><i class="fas fa-user"></i> ${patient.name}</h2>
+            
+            <!-- Información Personal -->
+            <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-info-circle"></i> Información Personal
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div><strong>Teléfono:</strong> ${patient.phone}</div>
+                    <div><strong>Email:</strong> ${patient.email || 'No registrado'}</div>
+                    <div><strong>Edad:</strong> ${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</div>
+                    <div><strong>Género:</strong> ${getGenderLabel(patient.gender)}</div>
+                </div>
+                ${patient.emergency_name ? `
+                    <div style="margin-top: 1rem;">
+                        <strong>Contacto de Emergencia:</strong> ${patient.emergency_name} - ${patient.emergency_phone || 'Sin teléfono'} (${patient.emergency_relationship || 'Sin relación'})
+                    </div>
+                ` : ''}
+            </div>
+            
+            <!-- Expediente Médico -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-file-medical"></i> Expediente Médico (${records.length})
+                </h3>
+                ${records.length === 0 ? `
+                    <p>No hay consultas médicas registradas</p>
+                ` : `
+                    <div style="overflow-x: auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Médico</th>
+                                    <th>Motivo</th>
+                                    <th>Diagnóstico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${records.map(record => `
+                                    <tr>
+                                        <td>${formatDateShort(record.visit_date)}</td>
+                                        <td>${record.doctors.name}</td>
+                                        <td>${record.chief_complaint || 'No especificado'}</td>
+                                        <td>${record.diagnosis || 'Pendiente'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+            </div>
+            
+            <!-- Historial de Citas -->
+            <div>
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-calendar-alt"></i> Historial de Citas (${appointments.length})
+                </h3>
+                ${appointments.length === 0 ? `
+                    <p>No hay citas registradas</p>
+                ` : `
+                    <div style="overflow-x: auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Médico</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${appointments.map(apt => `
+                                    <tr>
+                                        <td>${formatDateShort(apt.appointment_date)}</td>
+                                        <td>${apt.appointment_time}</td>
+                                        <td>${apt.doctors.name}</td>
+                                        <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+            </div>
+        `;
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al cargar historial del paciente', 'error');
+        document.getElementById('patient-history-content').innerHTML = '<p>Error al cargar historial</p>';
+    } finally {
+        hideLoading();
+    }
 }
 
           </script>
