@@ -2531,15 +2531,15 @@ async function showTodayAppointments() {
         <button class="btn btn-success" onclick="updateAppointmentStatus('${apt.id}', 'confirmed')" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem; font-size: 0.8rem;">
             <i class="fas fa-check"></i> Confirmar
         </button>
-        <button class="btn btn-outline" onclick="updateAppointmentStatus('${apt.id}', 'cancelled')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; color: var(--error); border-color: var(--error);">
+        <button class="btn btn-outline" onclick="confirmCancelAppointment('${apt.id}')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; color: var(--error); border-color: var(--error);">
             <i class="fas fa-times"></i> Cancelar
         </button>
     ` : ''}
     ${apt.status === 'confirmed' ? `
-        <button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}', 'completed')" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem; font-size: 0.8rem;">
+        <button class="btn btn-primary" onclick="confirmCompleteAppointment('${apt.id}')" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem; font-size: 0.8rem;">
             <i class="fas fa-user-check"></i> Completar
         </button>
-        <button class="btn btn-outline" onclick="updateAppointmentStatus('${apt.id}', 'cancelled')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; color: var(--error); border-color: var(--error);">
+        <button class="btn btn-outline" onclick="confirmCancelAppointment('${apt.id}')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; color: var(--error); border-color: var(--error);">
             <i class="fas fa-times"></i> Cancelar
         </button>
     ` : ''}
@@ -2552,6 +2552,9 @@ async function showTodayAppointments() {
         <span style="color: var(--error); font-weight: bold;">
             <i class="fas fa-ban"></i> Cancelada
         </span>
+        <button class="btn btn-outline" onclick="updateAppointmentStatus('${apt.id}', 'pending')" style="padding: 0.3rem 0.8rem; margin-left: 0.5rem; font-size: 0.8rem; color: var(--primary-blue); border-color: var(--primary-blue);">
+            <i class="fas fa-undo"></i> Reactivar
+        </button>
     ` : ''}
 </td>
                                 </tr>
@@ -2726,6 +2729,18 @@ async function updateAppointmentStatus(appointmentId, newStatus) {
         hideLoading();
     }
 }
+        function confirmCancelAppointment(appointmentId) {
+    if (confirm('¿Estás seguro de cancelar esta cita?\n\nPodrás reactivarla después si es necesario.')) {
+        updateAppointmentStatus(appointmentId, 'cancelled');
+    }
+}
+
+function confirmCompleteAppointment(appointmentId) {
+    if (confirm('¿Confirmas que el paciente se presentó y completó la cita?')) {
+        updateAppointmentStatus(appointmentId, 'completed');
+    }
+}
           </script>
 </body>
 </html>
+
