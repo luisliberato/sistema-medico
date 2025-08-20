@@ -22,6 +22,7 @@
             --white: #ffffff;
             --error: #dc2626;
             --success: #16a34a;
+            --warning: #f59e0b;
         }
 
         body {
@@ -84,6 +85,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary-blue);
+            cursor: pointer;
         }
 
         .logo i {
@@ -158,13 +160,14 @@
             background: #15803d;
         }
 
-        .btn-danger {
-            background: var(--error);
-            color: white;
+        .btn-white {
+            background: white;
+            color: var(--primary-blue);
         }
 
-        .btn-danger:hover {
-            background: #b91c1c;
+        .btn-white:hover {
+            background: var(--light-bg);
+            transform: translateY(-2px);
         }
 
         /* Main Container */
@@ -173,7 +176,7 @@
             min-height: calc(100vh - 80px);
         }
 
-        /* Landing Page */
+        /* Landing Page Styles */
         .hero {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-teal) 100%);
             color: white;
@@ -210,14 +213,213 @@
             font-size: 1.1rem;
         }
 
-        .btn-white {
-            background: white;
-            color: var(--primary-blue);
+        /* Section Styles */
+        .section {
+            padding: 4rem 2rem;
         }
 
-        .btn-white:hover {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Doctors Section */
+        .doctors {
             background: var(--light-bg);
-            transform: translateY(-2px);
+        }
+
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .doctor-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-teal));
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+
+        .doctor-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .specialty {
+            color: var(--secondary-teal);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .credentials {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        /* Services Section */
+        .services {
+            background: white;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 5px 15px rgba(30, 64, 175, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-teal));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features {
+            background: var(--light-bg);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-item h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--primary-blue);
+            color: white;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .contact-item i {
+            font-size: 2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 2rem;
         }
 
         /* Dashboard Styles */
@@ -399,62 +601,8 @@
             background: var(--primary-blue);
         }
 
-        /* Table Styles */
-        .table-container {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table th,
-        .table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .table th {
-            background: var(--light-bg);
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .table tr:hover {
-            background: var(--light-bg);
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-confirmed {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-completed {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-cancelled {
-            background: #fee2e2;
-            color: #991b1b;
+        .notification.warning {
+            background: var(--warning);
         }
 
         /* Responsive */
@@ -490,6 +638,14 @@
                 flex-direction: column;
                 gap: 0.5rem;
             }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -502,14 +658,15 @@
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
-            <div class="logo">
+            <div class="logo" onclick="showLandingPage()">
                 <i class="fas fa-user-md"></i>
                 Consultorio Médico Familiar
             </div>
             <ul class="nav-menu">
                 <li><a onclick="showLandingPage()">Inicio</a></li>
-                <li><a onclick="showDoctorsList()">Doctoras</a></li>
-                <li><a onclick="showServices()">Servicios</a></li>
+                <li><a onclick="scrollToSection('doctors')">Doctoras</a></li>
+                <li><a onclick="scrollToSection('services')">Servicios</a></li>
+                <li><a onclick="scrollToSection('contact')">Contacto</a></li>
             </ul>
             <div class="nav-buttons" id="nav-buttons">
                 <button class="btn btn-outline" onclick="openModal('patient-login')">
@@ -529,7 +686,7 @@
             <section class="hero">
                 <div class="hero-content">
                     <h1>Atención Médica de Confianza</h1>
-                    <p>Consultas presenciales y telemedicina con médicas especialistas. Tu salud es nuestra prioridad.</p>
+                    <p>Consultas presenciales y telemedicina con médicas especialistas certificadas. Tu salud es nuestra prioridad, brindamos atención personalizada y de calidad.</p>
                     <div class="hero-buttons">
                         <button class="btn btn-hero btn-white" onclick="openModal('appointment')">
                             <i class="fas fa-calendar-plus"></i> Agendar Cita
@@ -537,6 +694,190 @@
                         <button class="btn btn-hero btn-outline" onclick="openModal('patient-register')">
                             <i class="fas fa-user-plus"></i> Registrarse
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctors Section -->
+            <section class="section doctors" id="doctors">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Nuestras Especialistas</h2>
+                        <p>Médicas con amplia experiencia y dedicación al cuidado integral de tu salud y la de tu familia</p>
+                    </div>
+                    <div class="doctors-grid">
+                        <div class="doctor-card">
+                            <div class="doctor-photo">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3>Dra. María García</h3>
+                            <div class="specialty">Medicina Familiar</div>
+                            <div class="credentials">
+                                • Medicina General Integral<br>
+                                • 15 años de experiencia<br>
+                                • Especialista en medicina preventiva<br>
+                                • Certificada en telemedicina<br>
+                                • Miembro del Colegio Médico Dominicano
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('appointment')">
+                                <i class="fas fa-calendar"></i> Agendar Cita
+                            </button>
+                        </div>
+                        <div class="doctor-card">
+                            <div class="doctor-photo">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3>Dra. Ana Rodríguez</h3>
+                            <div class="specialty">Medicina Interna</div>
+                            <div class="credentials">
+                                • Medicina Interna y Familiar<br>
+                                • 12 años de experiencia<br>
+                                • Especialista en enfermedades crónicas<br>
+                                • Certificada en cardiología preventiva<br>
+                                • Experta en diabetes e hipertensión
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('appointment')">
+                                <i class="fas fa-calendar"></i> Agendar Cita
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="section services" id="services">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Nuestros Servicios</h2>
+                        <p>Atención médica integral para toda la familia con tecnología moderna y trato personalizado</p>
+                    </div>
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <h3>Consulta General</h3>
+                            <p>Evaluación médica completa, diagnóstico preciso y tratamiento personalizado para enfermedades comunes. Atención integral para adultos y adolescentes.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <h3>Telemedicina</h3>
+                            <p>Consultas médicas virtuales seguras desde la comodidad de tu hogar. Ideal para seguimientos, consultas preventivas y urgencias menores.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <h3>Medicina Preventiva</h3>
+                            <p>Chequeos regulares, vacunación, detección temprana de enfermedades y programas de prevención personalizados según tu edad y riesgo.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <h3>Seguimiento Crónico</h3>
+                            <p>Manejo especializado de enfermedades crónicas como diabetes, hipertensión, colesterol alto y seguimiento de tratamientos a largo plazo.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-baby"></i>
+                            </div>
+                            <h3>Medicina Familiar</h3>
+                            <p>Atención médica integral para toda la familia, desde adolescentes hasta adultos mayores, con enfoque en la salud familiar completa.</p>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <h3>Exámenes de Salud</h3>
+                            <p>Evaluaciones médicas completas, certificados de salud para trabajo o estudios, y chequeos ejecutivos con reporte detallado.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="section features">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>¿Por qué elegirnos?</h2>
+                        <p>Comprometidos con tu bienestar y el de tu familia</p>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h4>Horarios Flexibles</h4>
+                            <p>Adaptamos nuestros horarios a tu disponibilidad</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h4>Protocolos de Seguridad</h4>
+                            <p>Cumplimos con todos los estándares de bioseguridad</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <h4>Atención Personalizada</h4>
+                            <p>Cada paciente recibe atención individualizada</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h4>Tecnología Moderna</h4>
+                            <p>Expedientes digitales y consultas virtuales</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section class="section contact" id="contact">
+                <div class="container">
+                    <div class="section-title">
+                        <h2 style="color: white;">Contacto</h2>
+                        <p style="color: rgba(255,255,255,0.9);">Estamos aquí para cuidar tu salud. Contáctanos para agendar tu cita o resolver cualquier duda.</p>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Teléfono</strong><br>
+                                (809) 555-0123<br>
+                                <small>Lun-Vie: 8:00 AM - 6:00 PM</small>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong><br>
+                                contacto@consultoriomedico.com<br>
+                                <small>Respuesta en 24 horas</small>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Dirección</strong><br>
+                                Av. Principal #123<br>
+                                Santo Domingo, R.D.
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-whatsapp"></i>
+                            <div>
+                                <strong>WhatsApp</strong><br>
+                                (809) 555-0124<br>
+                                <small>Citas y consultas rápidas</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -588,7 +929,7 @@
                             <i class="fas fa-file-medical"></i> Mi Expediente
                         </h3>
                     </div>
-                    <p>Accede a tu historial médico completo</p>
+                    <p>Accede a tu historial médico completo y resultados de estudios</p>
                     <button class="btn btn-primary" onclick="showMedicalRecords()" style="margin-top: 1rem;">
                         <i class="fas fa-eye"></i> Ver Expediente
                     </button>
@@ -664,6 +1005,14 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer" id="landing-footer">
+        <div class="container">
+            <p>&copy; 2024 Consultorio Médico Familiar. Todos los derechos reservados.</p>
+            <p>Sistema certificado bajo estándares de seguridad médica y protección de datos</p>
+        </div>
+    </footer>
+
     <!-- Modals -->
     <!-- Patient Login Modal -->
     <div id="patient-login" class="modal">
@@ -674,10 +1023,12 @@
                 <div class="form-group">
                     <label for="patient-email">Email:</label>
                     <input type="email" id="patient-email" name="email" required placeholder="paciente@ejemplo.com">
+                    <small style="color: #666;">Prueba: paciente@ejemplo.com</small>
                 </div>
                 <div class="form-group">
                     <label for="patient-password">Contraseña:</label>
                     <input type="password" id="patient-password" name="password" required placeholder="paciente123">
+                    <small style="color: #666;">Prueba: paciente123</small>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                     <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
@@ -768,48 +1119,60 @@
     <div id="appointment" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('appointment')">&times;</span>
-            <h2><i class="fas fa-calendar-plus"></i> Agendar Cita</h2>
+            <h2><i class="fas fa-calendar-plus"></i> Agendar Cita Médica</h2>
             <form id="appointment-form" onsubmit="scheduleAppointment(event)">
                 <div class="form-group">
-                    <label for="appointment-doctor">Médico:</label>
+                    <label for="appointment-doctor">Médico Preferido:</label>
                     <select id="appointment-doctor" name="doctor" required>
                         <option value="">Cargando médicos...</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="appointment-date">Fecha:</label>
+                    <label for="appointment-date">Fecha de la Cita:</label>
                     <input type="date" id="appointment-date" name="date" required>
                 </div>
                 <div class="form-group">
-                    <label for="appointment-time">Hora:</label>
+                    <label for="appointment-time">Hora Preferida:</label>
                     <select id="appointment-time" name="time" required>
-                        <option value="">Seleccionar hora</option>
+                        <option value="">Seleccionar horario</option>
                         <option value="08:00">8:00 AM</option>
+                        <option value="08:30">8:30 AM</option>
                         <option value="09:00">9:00 AM</option>
+                        <option value="09:30">9:30 AM</option>
                         <option value="10:00">10:00 AM</option>
+                        <option value="10:30">10:30 AM</option>
                         <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
                         <option value="14:00">2:00 PM</option>
+                        <option value="14:30">2:30 PM</option>
                         <option value="15:00">3:00 PM</option>
+                        <option value="15:30">3:30 PM</option>
                         <option value="16:00">4:00 PM</option>
+                        <option value="16:30">4:30 PM</option>
                         <option value="17:00">5:00 PM</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="appointment-type">Tipo de Consulta:</label>
                     <select id="appointment-type" name="type" required>
-                        <option value="">Seleccionar tipo</option>
+                        <option value="">Seleccionar tipo de consulta</option>
                         <option value="general">Consulta General</option>
-                        <option value="followup">Seguimiento</option>
+                        <option value="followup">Consulta de Seguimiento</option>
                         <option value="checkup">Chequeo Preventivo</option>
+                        <option value="chronic">Control de Enfermedad Crónica</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="appointment-notes">Notas (opcional):</label>
-                    <textarea id="appointment-notes" name="notes" placeholder="Describe brevemente el motivo de la consulta..."></textarea>
+                    <label for="appointment-notes">Motivo de la Consulta:</label>
+                    <textarea id="appointment-notes" name="notes" placeholder="Describe brevemente el motivo de tu consulta o síntomas que presentas..."></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-calendar-check"></i> Confirmar Cita
+                    <i class="fas fa-calendar-check"></i> Confirmar Cita Médica
                 </button>
+                <p style="margin-top: 1rem; padding: 1rem; background: #f0f8ff; border-radius: 8px; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>Importante:</strong> Debes estar registrado como paciente para agendar citas. Te contactaremos para confirmar disponibilidad.
+                </p>
             </form>
         </div>
     </div>
@@ -863,6 +1226,7 @@
             document.getElementById('landing-page').style.display = 'block';
             document.getElementById('patient-dashboard').classList.remove('active');
             document.getElementById('doctor-dashboard').classList.remove('active');
+            document.getElementById('landing-footer').style.display = 'block';
             updateNavButtons();
         }
 
@@ -870,6 +1234,7 @@
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('patient-dashboard').classList.add('active');
             document.getElementById('doctor-dashboard').classList.remove('active');
+            document.getElementById('landing-footer').style.display = 'none';
             updateNavButtons();
             loadPatientData();
         }
@@ -878,8 +1243,16 @@
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('patient-dashboard').classList.remove('active');
             document.getElementById('doctor-dashboard').classList.add('active');
+            document.getElementById('landing-footer').style.display = 'none';
             updateNavButtons();
             loadDoctorData();
+        }
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function updateNavButtons() {
@@ -956,14 +1329,14 @@
                     
                     closeModal('patient-login');
                     showPatientDashboard();
-                    showNotification('Bienvenido a tu portal de paciente', 'success');
+                    showNotification('¡Bienvenido a tu portal de paciente!', 'success');
                     event.target.reset();
                 } else {
-                    showNotification('Credenciales incorrectas', 'error');
+                    showNotification('Credenciales incorrectas. Verifica tu email y contraseña.', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('Error al iniciar sesión', 'error');
+                showNotification('Error al iniciar sesión. Intenta nuevamente.', 'error');
             } finally {
                 hideLoading();
             }
@@ -994,14 +1367,14 @@
                     
                     closeModal('doctor-login');
                     showDoctorDashboard();
-                    showNotification('Acceso autorizado al sistema médico', 'success');
+                    showNotification(`Bienvenida al sistema médico, ${doctors[0].name}`, 'success');
                     event.target.reset();
                 } else {
-                    showNotification('Credenciales incorrectas', 'error');
+                    showNotification('Credenciales incorrectas. Verifica tu email institucional.', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('Error al iniciar sesión', 'error');
+                showNotification('Error al iniciar sesión. Intenta nuevamente.', 'error');
             } finally {
                 hideLoading();
             }
@@ -1029,7 +1402,7 @@
                 
                 if (error) {
                     if (error.code === '23505') {
-                        throw new Error('Este email ya está registrado');
+                        throw new Error('Este email ya está registrado. Intenta iniciar sesión.');
                     }
                     throw error;
                 }
@@ -1039,7 +1412,7 @@
                 
                 closeModal('patient-register');
                 showPatientDashboard();
-                showNotification('Cuenta creada exitosamente', 'success');
+                showNotification('¡Cuenta creada exitosamente! Bienvenido.', 'success');
                 event.target.reset();
                 
             } catch (error) {
@@ -1054,7 +1427,7 @@
             currentUser = null;
             userType = null;
             showLandingPage();
-            showNotification('Sesión cerrada correctamente', 'success');
+            showNotification('Has cerrado sesión correctamente', 'success');
         }
 
         // Load Functions
@@ -1079,6 +1452,7 @@
                 
             } catch (error) {
                 console.error('Error loading doctors:', error);
+                showNotification('Error al cargar médicos', 'warning');
             }
         }
 
@@ -1123,6 +1497,7 @@
                 
             } catch (error) {
                 console.error('Error loading patient data:', error);
+                showNotification('Error al cargar datos del paciente', 'warning');
             }
         }
 
@@ -1174,6 +1549,7 @@
                 
             } catch (error) {
                 console.error('Error loading doctor data:', error);
+                showNotification('Error al cargar datos del médico', 'warning');
             }
         }
 
@@ -1187,9 +1563,9 @@
             // Check if user is logged in
             if (!currentUser || userType !== 'patient') {
                 hideLoading();
-                showNotification('Debes iniciar sesión como paciente para agendar citas', 'error');
+                showNotification('Debes registrarte e iniciar sesión como paciente para agendar citas', 'warning');
                 closeModal('appointment');
-                openModal('patient-login');
+                openModal('patient-register');
                 return;
             }
             
@@ -1212,7 +1588,7 @@
                 if (error) throw error;
                 
                 closeModal('appointment');
-                showNotification('Cita agendada exitosamente', 'success');
+                showNotification('¡Cita agendada exitosamente! Te contactaremos para confirmar.', 'success');
                 event.target.reset();
                 
                 // Reload patient data if on patient dashboard
@@ -1222,7 +1598,7 @@
                 
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('Error al agendar cita', 'error');
+                showNotification('Error al agendar cita. Intenta nuevamente.', 'error');
             } finally {
                 hideLoading();
             }
@@ -1253,34 +1629,27 @@
             const labels = {
                 'general': 'Consulta General',
                 'followup': 'Seguimiento',
-                'checkup': 'Chequeo Preventivo'
+                'checkup': 'Chequeo Preventivo',
+                'chronic': 'Control Crónico'
             };
             return labels[type] || type;
         }
 
         // Placeholder functions for future features
         function showPatientAppointments() {
-            showNotification('Función en desarrollo: Historial de citas', 'info');
+            showNotification('Función en desarrollo: Historial completo de citas', 'info');
         }
 
         function showMedicalRecords() {
-            showNotification('Función en desarrollo: Expediente médico', 'info');
+            showNotification('Función en desarrollo: Expediente médico completo', 'info');
         }
 
         function showTodayAppointments() {
-            showNotification('Función en desarrollo: Agenda del día', 'info');
+            showNotification('Función en desarrollo: Agenda detallada del día', 'info');
         }
 
         function showPatientsList() {
-            showNotification('Función en desarrollo: Lista de pacientes', 'info');
-        }
-
-        function showDoctorsList() {
-            showNotification('Información: Dra. María García y Dra. Ana Rodríguez', 'info');
-        }
-
-        function showServices() {
-            showNotification('Servicios: Consulta General, Medicina Preventiva, Seguimiento Crónico', 'info');
+            showNotification('Función en desarrollo: Lista completa de pacientes', 'info');
         }
     </script>
 </body>
