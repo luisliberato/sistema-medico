@@ -2452,7 +2452,197 @@ async function showPatientsList() {
         hideLoading();
     }
 }
+
+
+    // Agregar estas funciones que faltan:
+
+async function showTodayAppointments() {
+    if (!currentUser || userType !== 'doctor') {
+        showNotification('Debes estar logueado como doctor', 'warning');
+        return;
+    }
+    
+    // Crear modal dinámicamente si no existe
+    let modal = document.getElementById('today-appointments');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'today-appointments';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('today-appointments')">&times;</span>
+                <h2><i class="fas fa-calendar-day"></i> Agenda de Hoy</h2>
+                <div id="today-appointments-list">
+                    <p>Cargando citas del día...</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    openModal('today-appointments');
+    showLoading();
+    
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const { data: appointments, error } = await supabase
+            .from('appointments')
+            .select(`
+                *,
+                patients (name, phone, email)
+            `)
+            .eq('doctor_id', currentUser.id)
+            .eq('appointment_date', today)
+            .order('appointment_time', { ascending: true });
+        
+        if (error) throw error;
+        
+        const listContainer = document.getElementById('today-appointments-list');
+        
+        if (appointments.length === 0) {
+            listContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-calendar-check" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                    <h3>No hay citas programadas para hoy</h3>
+                    <p>¡Perfecto día libre!</p>
+                </div>
+            `;
+        } else {
+            listContainer.innerHTML = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${appointments.map(apt => `
+                                <tr>
+                                    <td><strong>${apt.appointment_time}</strong></td>
+                                    <td>${apt.patients?.name || 'Sin nombre'}</td>
+                                    <td>${apt.patients?.phone || 'Sin teléfono'}</td>
+                                    <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al cargar agenda del día', 'error');
+        document.getElementById('today-appointments-list').innerHTML = '<p>Error al cargar agenda</p>';
+    } finally {
+        hideLoading();
+    }
+}
+
+async function showPatientsList() {
+    if (!currentUser || userType !== 'doctor') {
+        showNotification('Debes estar logueado como doctor', 'warning');
+        return;
+    }
+    
+    // Crear modal dinámicamente si no existe
+    let modal = document.getElementById('patients-list');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'patients-list';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('patients-list')">&times;</span>
+                <h2><i class="fas fa-users"></i> Mis Pacientes</h2>
+                <div class="form-group">
+                    <input type="text" id="patient-search" placeholder="Buscar paciente..." onkeyup="searchPatients()">
+                </div>
+                <div id="patients-list-content">
+                    <p>Cargando lista de pacientes...</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    openModal('patients-list');
+    showLoading();
+    
+    try {
+        const { data: allPatients, error } = await supabase
+            .from('patients')
+            .select('*')
+            .eq('status', 'active')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const listContainer = document.getElementById('patients-list-content');
+        
+        if (allPatients.length === 0) {
+            listContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                    <h3>Aún no hay pacientes registrados</h3>
+                    <p>Usa "Nuevo Paciente" para agregar el primero.</p>
+                </div>
+            `;
+        } else {
+            listContainer.innerHTML = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Edad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${allPatients.map(patient => `
+                                <tr>
+                                    <td><strong>${patient.name}</strong></td>
+                                    <td>${patient.phone}</td>
+                                    <td>${patient.email || 'No registrado'}</td>
+                                    <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al cargar pacientes', 'error');
+        document.getElementById('patients-list-content').innerHTML = '<p>Error al cargar pacientes</p>';
+    } finally {
+        hideLoading();
+    }
+}
+
+function searchPatients() {
+    const searchTerm = document.getElementById('patient-search')?.value.toLowerCase() || '';
+    const rows = document.querySelectorAll('#patients-list-content tbody tr');
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
           </script>
 </body>
 </html>
+
 
