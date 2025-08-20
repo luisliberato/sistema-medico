@@ -1115,7 +1115,7 @@
         </div>
     </div>
 
-    <!-- Appointment Modal -->
+            <!-- Appointment Modal -->
     <div id="appointment" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('appointment')">&times;</span>
@@ -1173,6 +1173,128 @@
                     <i class="fas fa-info-circle"></i> 
                     <strong>Importante:</strong> Debes estar registrado como paciente para agendar citas. Te contactaremos para confirmar disponibilidad.
                 </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Today's Appointments Modal -->
+    <div id="today-appointments" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('today-appointments')">&times;</span>
+            <h2><i class="fas fa-calendar-day"></i> Agenda de Hoy</h2>
+            <div id="today-appointments-list">
+                <p>Cargando citas del día...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patients List Modal -->
+    <div id="patients-list" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('patients-list')">&times;</span>
+            <h2><i class="fas fa-users"></i> Mis Pacientes</h2>
+            <div class="form-group">
+                <input type="text" id="patient-search" placeholder="Buscar paciente por nombre, teléfono o email..." onkeyup="searchPatients()">
+            </div>
+            <div id="patients-list-content">
+                <p>Cargando lista de pacientes...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Patient Modal -->
+    <div id="new-patient" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('new-patient')">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Nuevo Paciente</h2>
+            <form id="new-patient-form" onsubmit="createNewPatient(event)">
+                <div class="form-group">
+                    <label for="new-patient-name">Nombre Completo:</label>
+                    <input type="text" id="new-patient-name" name="name" required placeholder="Nombre completo del paciente">
+                </div>
+                <div class="form-group">
+                    <label for="new-patient-email">Email:</label>
+                    <input type="email" id="new-patient-email" name="email" placeholder="email@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="new-patient-phone">Teléfono:</label>
+                    <input type="tel" id="new-patient-phone" name="phone" required placeholder="(809) 555-0123">
+                </div>
+                <div class="form-group">
+                    <label for="new-patient-birth">Fecha de Nacimiento:</label>
+                    <input type="date" id="new-patient-birth" name="date_of_birth">
+                </div>
+                <div class="form-group">
+                    <label for="new-patient-gender">Género:</label>
+                    <select id="new-patient-gender" name="gender">
+                        <option value="">Seleccionar</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="Other">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="new-patient-address">Dirección:</label>
+                    <textarea id="new-patient-address" name="address" placeholder="Dirección completa"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="new-patient-emergency">Contacto de Emergencia:</label>
+                    <input type="text" id="new-patient-emergency" name="emergency_contact" placeholder="Nombre y teléfono de contacto de emergencia">
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Crear Paciente
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Medical Record Modal -->
+    <div id="new-record" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('new-record')">&times;</span>
+            <h2><i class="fas fa-file-medical-alt"></i> Nueva Consulta Médica</h2>
+            <form id="new-record-form" onsubmit="createNewRecord(event)">
+                <div class="form-group">
+                    <label for="record-patient">Paciente:</label>
+                    <select id="record-patient" name="patient_id" required>
+                        <option value="">Seleccionar paciente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="record-date">Fecha de Consulta:</label>
+                    <input type="date" id="record-date" name="visit_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="record-complaint">Motivo Principal:</label>
+                    <textarea id="record-complaint" name="chief_complaint" required placeholder="Motivo principal de la consulta"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="record-symptoms">Síntomas:</label>
+                    <textarea id="record-symptoms" name="symptoms" placeholder="Síntomas presentados por el paciente"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="record-diagnosis">Diagnóstico:</label>
+                    <textarea id="record-diagnosis" name="diagnosis" placeholder="Diagnóstico médico"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="record-treatment">Plan de Tratamiento:</label>
+                    <textarea id="record-treatment" name="treatment_plan" placeholder="Plan de tratamiento y recomendaciones"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="record-prescriptions">Medicamentos:</label>
+                    <textarea id="record-prescriptions" name="prescriptions" placeholder="Medicamentos recetados"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="record-followup">Fecha de Seguimiento:</label>
+                    <input type="date" id="record-followup" name="follow_up_date">
+                </div>
+                <div class="form-group">
+                    <label for="record-notes">Notas Adicionales:</label>
+                    <textarea id="record-notes" name="notes" placeholder="Notas adicionales de la consulta"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-save"></i> Guardar Consulta
+                </button>
             </form>
         </div>
     </div>
@@ -1283,6 +1405,11 @@
             document.getElementById(modalId).style.display = 'block';
             if (modalId === 'appointment') {
                 loadDoctors();
+            } else if (modalId === 'new-record') {
+                loadPatientsForRecord();
+                // Set today's date as default
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('record-date').value = today;
             }
         }
 
@@ -1635,7 +1762,292 @@
             return labels[type] || type;
         }
 
-        // Placeholder functions for future features
+        // Doctor Functions - Real implementations
+        async function showTodayAppointments() {
+            if (!currentUser || userType !== 'doctor') return;
+            
+            openModal('today-appointments');
+            showLoading();
+            
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const { data: appointments, error } = await supabase
+                    .from('appointments')
+                    .select(`
+                        *,
+                        patients (name, phone, email)
+                    `)
+                    .eq('doctor_id', currentUser.id)
+                    .eq('appointment_date', today)
+                    .order('appointment_time', { ascending: true });
+                
+                if (error) throw error;
+                
+                const listContainer = document.getElementById('today-appointments-list');
+                
+                if (appointments.length === 0) {
+                    listContainer.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-calendar-check" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                            <h3>No hay citas programadas para hoy</h3>
+                            <p>¡Perfecto! Puedes aprovechar para revisar expedientes o planificar.</p>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = `
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        <th>Paciente</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Contacto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${appointments.map(apt => `
+                                        <tr>
+                                            <td><strong>${apt.appointment_time}</strong></td>
+                                            <td>${apt.patients.name}</td>
+                                            <td>${getTypeLabel(apt.type)}</td>
+                                            <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+                                            <td>${apt.patients.phone}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al cargar agenda del día', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function showPatientsList() {
+            if (!currentUser || userType !== 'doctor') return;
+            
+            openModal('patients-list');
+            loadPatientsList();
+        }
+
+        async function loadPatientsList() {
+            showLoading();
+            
+            try {
+                const { data: appointments, error } = await supabase
+                    .from('appointments')
+                    .select(`
+                        patient_id,
+                        patients (id, name, phone, email, date_of_birth)
+                    `)
+                    .eq('doctor_id', currentUser.id);
+                
+                if (error) throw error;
+                
+                // Get unique patients
+                const uniquePatients = [];
+                const patientIds = new Set();
+                
+                appointments.forEach(apt => {
+                    if (!patientIds.has(apt.patient_id)) {
+                        patientIds.add(apt.patient_id);
+                        uniquePatients.push(apt.patients);
+                    }
+                });
+                
+                const listContainer = document.getElementById('patients-list-content');
+                
+                if (uniquePatients.length === 0) {
+                    listContainer.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                            <h3>Aún no tienes pacientes</h3>
+                            <p>Los pacientes aparecerán aquí cuando agenden citas contigo.</p>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = `
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
+                                        <th>Edad</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${uniquePatients.map(patient => `
+                                        <tr>
+                                            <td><strong>${patient.name}</strong></td>
+                                            <td>${patient.phone}</td>
+                                            <td>${patient.email || 'No registrado'}</td>
+                                            <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
+                                            <td>
+                                                <button class="btn btn-primary" onclick="viewPatientHistory('${patient.id}')" style="padding: 0.5rem;">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al cargar lista de pacientes', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function searchPatients() {
+            const searchTerm = document.getElementById('patient-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#patients-list-content tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        async function createNewPatient(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(event.target);
+            const patientData = {
+                name: formData.get('name'),
+                email: formData.get('email') || null,
+                phone: formData.get('phone'),
+                date_of_birth: formData.get('date_of_birth') || null,
+                gender: formData.get('gender') || null,
+                address: formData.get('address') || null,
+                emergency_contact: formData.get('emergency_contact') || null,
+                status: 'active'
+            };
+            
+            try {
+                const { data, error } = await supabase
+                    .from('patients')
+                    .insert([patientData])
+                    .select();
+                
+                if (error) {
+                    if (error.code === '23505') {
+                        throw new Error('Este email ya está registrado');
+                    }
+                    throw error;
+                }
+                
+                closeModal('new-patient');
+                showNotification('Paciente creado exitosamente', 'success');
+                event.target.reset();
+                
+                // Reload doctor data
+                loadDoctorData();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Error al crear paciente', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function createNewRecord(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(event.target);
+            const recordData = {
+                patient_id: formData.get('patient_id'),
+                doctor_id: currentUser.id,
+                visit_date: formData.get('visit_date'),
+                chief_complaint: formData.get('chief_complaint'),
+                symptoms: formData.get('symptoms') || null,
+                diagnosis: formData.get('diagnosis') || null,
+                treatment_plan: formData.get('treatment_plan') || null,
+                prescriptions: formData.get('prescriptions') || null,
+                follow_up_date: formData.get('follow_up_date') || null,
+                notes: formData.get('notes') || null
+            };
+            
+            try {
+                const { data, error } = await supabase
+                    .from('medical_records')
+                    .insert([recordData])
+                    .select();
+                
+                if (error) throw error;
+                
+                closeModal('new-record');
+                showNotification('Consulta médica guardada exitosamente', 'success');
+                event.target.reset();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al guardar consulta', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadPatientsForRecord() {
+            try {
+                const { data: appointments, error } = await supabase
+                    .from('appointments')
+                    .select(`
+                        patient_id,
+                        patients (id, name)
+                    `)
+                    .eq('doctor_id', currentUser.id);
+                
+                if (error) throw error;
+                
+                const selectElement = document.getElementById('record-patient');
+                selectElement.innerHTML = '<option value="">Seleccionar paciente</option>';
+                
+                // Get unique patients
+                const uniquePatients = [];
+                const patientIds = new Set();
+                
+                appointments.forEach(apt => {
+                    if (!patientIds.has(apt.patient_id)) {
+                        patientIds.add(apt.patient_id);
+                        uniquePatients.push(apt.patients);
+                    }
+                });
+                
+                uniquePatients.forEach(patient => {
+                    const option = document.createElement('option');
+                    option.value = patient.id;
+                    option.textContent = patient.name;
+                    selectElement.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading patients for record:', error);
+            }
+        }
+
+        // Patient Functions
         function showPatientAppointments() {
             showNotification('Función en desarrollo: Historial completo de citas', 'info');
         }
@@ -1644,12 +2056,21 @@
             showNotification('Función en desarrollo: Expediente médico completo', 'info');
         }
 
-        function showTodayAppointments() {
-            showNotification('Función en desarrollo: Agenda detallada del día', 'info');
+        function viewPatientHistory(patientId) {
+            showNotification('Función en desarrollo: Historial del paciente', 'info');
         }
 
-        function showPatientsList() {
-            showNotification('Función en desarrollo: Lista completa de pacientes', 'info');
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            return age;
         }
     </script>
 </body>
