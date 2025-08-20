@@ -2548,14 +2548,16 @@ async function showTodayAppointments() {
             <i class="fas fa-check-circle"></i> Completada
         </span>
     ` : ''}
-    ${apt.status === 'cancelled' ? `
+   ${apt.status === 'cancelled' ? `
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
         <span style="color: var(--error); font-weight: bold;">
             <i class="fas fa-ban"></i> Cancelada
         </span>
-        <button class="btn btn-outline" onclick="updateAppointmentStatus('${apt.id}', 'pending')" style="padding: 0.3rem 0.8rem; margin-left: 0.5rem; font-size: 0.8rem; color: var(--primary-blue); border-color: var(--primary-blue);">
+        <button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}', 'pending')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;">
             <i class="fas fa-undo"></i> Reactivar
         </button>
-    ` : ''}
+    </div>
+` : ''}
 </td>
                                 </tr>
                             `).join('')}
@@ -2743,4 +2745,3 @@ function confirmCompleteAppointment(appointmentId) {
           </script>
 </body>
 </html>
-
