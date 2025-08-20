@@ -2391,60 +2391,7 @@ async function showTodayAppointments() {
         hideLoading();
     }
 }   
-    try {
-        const { data: allPatients, error } = await supabase
-            .from('patients')
-            .select('*')
-            .eq('status', 'active')
-            .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        
-        const listContainer = document.getElementById('patients-list-content');
-        
-        if (allPatients.length === 0) {
-            listContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem;">
-                    <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
-                    <h3>Aún no hay pacientes registrados</h3>
-                    <p>Crea tu primer paciente usando el botón "Nuevo Paciente".</p>
-                </div>
-            `;
-        } else {
-            listContainer.innerHTML = `
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Teléfono</th>
-                                <th>Email</th>
-                                <th>Edad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${allPatients.map(patient => `
-                                <tr>
-                                    <td><strong>${patient.name}</strong></td>
-                                    <td>${patient.phone}</td>
-                                    <td>${patient.email || 'No registrado'}</td>
-                                    <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Error al cargar lista de pacientes', 'error');
-    } finally {
-        hideLoading();
-    }
-}
-
+    
 
     // Agregar estas funciones que faltan:
 
