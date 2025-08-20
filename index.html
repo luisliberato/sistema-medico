@@ -7,13 +7,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Estilos generales */
+        /* Estilos básicos */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Paleta de colores */
         :root {
             --primary-blue: #1e40af;
             --secondary-teal: #0891b2;
@@ -33,9 +34,44 @@
             background: var(--light-bg);
         }
 
-        /* ========================================= */
-        /*              LOADING SPINNER              */
-        /* ========================================= */
+        /* Estilos de modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Carga de spinner */
         .loading {
             display: none;
             position: fixed;
@@ -63,79 +99,156 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ========================================= */
-        /*                 HEADER                   */
-        /* ========================================= */
-        <div class="header">
-            <nav class="nav-container">
-                <div class="logo" onclick="showLandingPage()">
-                    <i class="fas fa-user-md"></i>
-                    TuCliniCard
-                </div>
-                <!-- Navegación -->
-                <ul class="nav-menu">
-                    <li><a onclick="showLandingPage()">Inicio</a></li>
-                    <li><a onclick="scrollToSection('doctors')">Doctores</a></li>
-                    <li><a onclick="scrollToSection('services')">Servicios</a></li>
-                    <li><a onclick="scrollToSection('contact')">Contacto</a></li>
-                </ul>
-                <!-- Botones de inicio de sesión -->
-                <div class="nav-buttons" id="nav-buttons">
-                    <button class="btn btn-outline" onclick="openModal('patient-login')">
-                        <i class="fas fa-user"></i> Pacientes
-                    </button>
-                    <button class="btn btn-primary" onclick="openModal('doctor-login')">
-                        <i class="fas fa-user-md"></i> Médicos
-                    </button>
-                </div>
-            </nav>
-        </div>
+        /* Estilos de sección */
+        .section {
+            padding: 4rem 2rem;
+        }
 
-        <!-- ========================================= -->
-        <!--         LANDING PAGE (Inicio)            -->
-        <!-- ========================================= -->
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tarjetas de médicos */
+        .doctor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .doctor-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-teal));
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Sección de servicios */
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 5px 15px rgba(30, 64, 175, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-teal));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <div class="logo" onclick="showLandingPage()">
+                <i class="fas fa-user-md"></i> TuCliniCard
+            </div>
+            <div id="nav-buttons"></div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Landing Page -->
         <section class="hero">
             <div class="hero-content">
-                <h1>Atención Médica de Confianza</h1>
-                <p>Consultas presenciales y telemedicina con médicos especialistas certificados.</p>
+                <h1>Bienvenido a TuCliniCard</h1>
+                <p>Consulta médica desde la comodidad de tu hogar, conoce a nuestros doctores y agendar tu cita en línea.</p>
                 <div class="hero-buttons">
                     <button class="btn btn-hero btn-white" onclick="openModal('appointment')">
                         <i class="fas fa-calendar-plus"></i> Agendar Cita
                     </button>
-                    <button class="btn btn-hero btn-outline" onclick="openModal('patient-register')">
-                        <i class="fas fa-user-plus"></i> Registrarse
+                    <button class="btn btn-hero btn-outline" onclick="openModal('patient-login')">
+                        <i class="fas fa-user"></i> Iniciar Sesión
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- ========================================= -->
-        <!--         DOCTORS SECTION (Lista Médicos)   -->
-        <!-- ========================================= -->
-        <section class="section doctors" id="doctors">
+        <!-- Doctors Section -->
+        <section class="section" id="doctors">
             <div class="container">
                 <div class="section-title">
-                    <h2>Nuestro Equipo Médico</h2>
-                    <p>Especialistas certificados con amplia experiencia, dedicados al cuidado integral de tu salud</p>
+                    <h2>Nuestros Doctores</h2>
+                    <p>Especialistas en diversas áreas médicas disponibles para tu atención</p>
                 </div>
-                <div class="doctors-grid">
-                    <!-- Aquí se generan dinámicamente las tarjetas de los médicos -->
-                    <!-- Cada card representa a un médico con su foto, nombre y especialidad -->
-                    <!-- Este contenido se llenará usando la función loadDoctorData() -->
+                <div class="doctors-grid" id="doctors-list">
+                    <!-- Aquí se cargarán los médicos dinámicamente -->
                 </div>
             </div>
         </section>
 
-        <!-- ========================================= -->
-        <!--              MODALS (Formularios)         -->
-        <!-- ========================================= -->
-        <!-- Modal para login de paciente -->
+        <!-- Modal para login paciente -->
         <div id="patient-login" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('patient-login')">&times;</span>
-                <h2><i class="fas fa-user"></i> Portal del Paciente</h2>
+                <h2><i class="fas fa-user"></i> Iniciar Sesión Paciente</h2>
                 <form id="patient-login-form" onsubmit="loginPatient(event)">
-                    <!-- Campos del formulario para login de paciente -->
                     <div class="form-group">
                         <label for="patient-email">Email:</label>
                         <input type="email" id="patient-email" name="email" required placeholder="juan.perez@test.com">
@@ -147,166 +260,184 @@
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
                         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                     </button>
-                    <p style="text-align: center; margin-top: 1rem;">
-                        <a href="#" onclick="switchModal('patient-login', 'patient-register')" style="color: var(--primary-blue);">
-                            ¿No tienes cuenta? Regístrate aquí
-                        </a>
-                    </p>
                 </form>
             </div>
         </div>
 
-        <!-- Modal para registrar nuevo paciente -->
-        <div id="patient-register" class="modal">
+        <!-- Modal para agendar cita -->
+        <div id="appointment" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal('patient-register')">&times;</span>
-                <h2><i class="fas fa-user-plus"></i> Registro de Paciente</h2>
-                <form id="patient-register-form" onsubmit="registerPatient(event)">
-                    <!-- Campos del formulario para registrar nuevo paciente -->
+                <span class="close" onclick="closeModal('appointment')">&times;</span>
+                <h2><i class="fas fa-calendar-plus"></i> Agendar Cita Médica</h2>
+                <form id="appointment-form" onsubmit="scheduleAppointment(event)">
+                    <div class="form-group">
+                        <label for="appointment-doctor">Médico:</label>
+                        <select id="appointment-doctor" name="doctor" required>
+                            <!-- Los médicos se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointment-date">Fecha:</label>
+                        <input type="date" id="appointment-date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointment-time">Hora:</label>
+                        <select id="appointment-time" name="time" required>
+                            <option value="09:00">09:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <!-- Otras horas... -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointment-type">Tipo de Consulta:</label>
+                        <select id="appointment-type" name="type" required>
+                            <option value="general">Consulta General</option>
+                            <option value="followup">Consulta de Seguimiento</option>
+                            <option value="checkup">Chequeo Preventivo</option>
+                            <!-- Otros tipos -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-check"></i> Confirmar Cita
+                    </button>
                 </form>
             </div>
         </div>
+    </div>
 
-        <!-- ========================================= -->
-        <!--          JAVASCRIPT FUNCIONES            -->
-        <!-- ========================================= -->
-        <script>
-            // Configuración de Supabase
-            const SUPABASE_URL = 'https://ooacvnvxuvnhwodpqwoh.supabase.co';
-            const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <script>
+        const SUPABASE_URL = 'https://ooacvnvxuvnhwodpqwoh.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            let currentUser = null;  // Usuario actual (paciente o médico)
-            let userType = null;  // Tipo de usuario (paciente o médico)
+        let currentUser = null;
+        let userType = null;
 
-            // Función para mostrar el spinner de carga
-            function showLoading() {
-                document.getElementById('loading').style.display = 'flex';
-            }
-
-            // Función para ocultar el spinner de carga
-            function hideLoading() {
-                document.getElementById('loading').style.display = 'none';
-            }
-
-            // Función para mostrar la página de inicio
-            function showLandingPage() {
-                document.getElementById('landing-page').style.display = 'block';
-                document.getElementById('patient-dashboard').classList.remove('active');
-                document.getElementById('doctor-dashboard').classList.remove('active');
-                updateNavButtons();
-            }
-
-            // Función para actualizar los botones de navegación
-            function updateNavButtons() {
-                const navButtons = document.getElementById('nav-buttons');
-                if (currentUser) {
-                    navButtons.innerHTML = `
-                        <span style="color: var(--primary-blue); font-weight: 600;">
-                            <i class="fas fa-user"></i> ${currentUser.name}
-                        </span>
-                        <button class="btn btn-outline" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i> Salir
-                        </button>
-                    `;
-                } else {
-                    navButtons.innerHTML = `
-                        <button class="btn btn-outline" onclick="openModal('patient-login')">
-                            <i class="fas fa-user"></i> Pacientes
-                        </button>
-                        <button class="btn btn-primary" onclick="openModal('doctor-login')">
-                            <i class="fas fa-user-md"></i> Médicos
-                        </button>
-                    `;
-                }
-            }
-
-            // Función para iniciar sesión de paciente
-            async function loginPatient(event) {
-                event.preventDefault();
-                showLoading();
-
-                const formData = new FormData(event.target);
-                const email = formData.get('email');
-                const password = formData.get('password');
-
-                try {
-                    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password
-                    });
-
-                    if (authError) throw authError;
-
-                    const { data: patient, error: patientError } = await supabase
-                        .from('patients')
-                        .select('*')
-                        .eq('email', email)
-                        .eq('status', 'active')
-                        .single();
-
-                    if (patientError || !patient) {
-                        throw new Error('Paciente no encontrado o inactivo');
-                    }
-
-                    currentUser = patient;
-                    userType = 'patient';
-                    closeModal('patient-login');
-                    showLandingPage();
-                    updateNavButtons();
-                } catch (error) {
-                    console.error('Error en login:', error);
-                    alert(error.message);
-                } finally {
-                    hideLoading();
-                }
-            }
-
-            // Función para cerrar sesión
-            async function logout() {
-                try {
-                    const { error } = await supabase.auth.signOut();
-                    if (error) throw error;
-
-                    currentUser = null;
-                    userType = null;
-                    showLandingPage();
-                    updateNavButtons();
-                } catch (error) {
-                    console.error('Error al cerrar sesión:', error);
-                }
-            }
-
-            // Función para abrir el modal
-            function openModal(modalId) {
-                document.getElementById(modalId).style.display = 'block';
-            }
-
-            // Función para cerrar el modal
-            function closeModal(modalId) {
-                document.getElementById(modalId).style.display = 'none';
-            }
-
-            // Función para mostrar los médicos (esto puede ser dinámico)
-            async function loadDoctors() {
-                const { data: doctors, error } = await supabase.from('doctors').select('*');
-                if (error) {
-                    console.error('Error cargando médicos:', error);
-                    return;
-                }
-
-                const doctorContainer = document.getElementById('doctors');
-                doctorContainer.innerHTML = doctors.map(doctor => `
-                    <div class="doctor-card">
-                        <div class="doctor-photo" style="background-image: url(${doctor.avatar_url || 'default-avatar.jpg'});"></div>
+        // Función para cargar médicos
+        async function loadDoctors() {
+            try {
+                const { data: doctors, error } = await supabase
+                    .from('doctors')
+                    .select('id, name, specialty')
+                    .eq('status', 'active')
+                    .order('name', { ascending: true });
+                
+                if (error) throw error;
+                
+                const doctorsList = document.getElementById('doctors-list');
+                doctorsList.innerHTML = '';  // Limpiar la lista de médicos
+                
+                doctors.forEach(doctor => {
+                    const doctorCard = document.createElement('div');
+                    doctorCard.classList.add('doctor-card');
+                    doctorCard.innerHTML = `
+                        <div class="doctor-photo" style="background-image: url('https://via.placeholder.com/150');"></div>
                         <h3>${doctor.name}</h3>
                         <div class="specialty">${doctor.specialty}</div>
                         <button class="btn btn-primary" onclick="openModal('appointment')">Agendar Cita</button>
-                    </div>
-                `).join('');
+                    `;
+                    doctorsList.appendChild(doctorCard);
+                });
+                
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+                showNotification('Error al cargar médicos', 'error');
             }
+        }
 
-            // Ejecutar la carga inicial de médicos
-            loadDoctors();
-        </script>
+        // Función para cargar datos del paciente
+        function loadPatientData() {
+            if (!currentUser || userType !== 'patient') return;
+
+            // Aquí puedes cargar los datos del paciente si es necesario.
+        }
+
+        // Función para cargar datos del doctor
+        function loadDoctorData() {
+            if (!currentUser || userType !== 'doctor') return;
+
+            // Aquí puedes cargar los datos del doctor si es necesario.
+        }
+
+        // Función para iniciar sesión de paciente
+        async function loginPatient(event) {
+            event.preventDefault();
+            showLoading();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            try {
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (authError) {
+                    console.error('Auth error:', authError);
+                    showNotification(authError.message, 'error');
+                    return;
+                }
+
+                const { data: patient, error: patientError } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('status', 'active')
+                    .single();
+
+                if (patientError || !patient) {
+                    console.error('Patient not found:', patientError);
+                    showNotification('Paciente no encontrado', 'error');
+                    return;
+                }
+
+                currentUser = patient;
+                userType = 'patient';
+                closeModal('patient-login');
+                showPatientDashboard();
+
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Error al iniciar sesión', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Función para cerrar sesión
+        async function logout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            userType = null;
+            showLandingPage();
+        }
+
+        // Mostrar y ocultar modales
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Funciones adicionales
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.classList.add('notification', type);
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+    </script>
+</body>
 </html>
