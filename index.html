@@ -1248,6 +1248,16 @@
         </div>
     </div>
 
+    <!-- Patient History Modal -->
+    <div id="patient-history" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close" onclick="closeModal('patient-history')">&times;</span>
+            <div id="patient-history-content">
+                <p>Cargando historial del paciente...</p>
+            </div>
+        </div>
+    </div>
+
     <!-- New Medical Record Modal -->
     <div id="new-record" class="modal">
         <div class="modal-content">
@@ -1646,16 +1656,15 @@
                 
                 document.getElementById('today-appointments-count').textContent = todayAppointments.length;
                 
-                // Load total patients
-                const { data: patients, error: patientsError } = await supabase
-                    .from('appointments')
-                    .select('patient_id')
-                    .eq('doctor_id', currentUser.id);
+                // Load total active patients
+                const { data: allPatients, error: patientsError } = await supabase
+                    .from('patients')
+                    .select('id')
+                    .eq('status', 'active');
                 
                 if (patientsError) throw patientsError;
                 
-                const uniquePatients = new Set(patients.map(p => p.patient_id));
-                document.getElementById('total-patients-count').textContent = uniquePatients.size;
+                document.getElementById('total-patients-count').textContent = allPatients.length;
                 
                 // Load week appointments
                 const startOfWeek = new Date();
@@ -1841,38 +1850,42 @@
             showLoading();
             
             try {
-                const { data: appointments, error } = await supabase
-                    .from('appointments')
-                    .select(`
-                        patient_id,
-                        patients (id, name, phone, email, date_of_birth)
-                    `)
-                    .eq('doctor_id', currentUser.id);
+                // Get all patients (not just those with appointments)
+                const { data: allPatients, error: patientsError } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('status', 'active')
+                    .order('created_at', { ascending: false });
                 
-                if (error) throw error;
-                
-                // Get unique patients
-                const uniquePatients = [];
-                const patientIds = new Set();
-                
-                appointments.forEach(apt => {
-                    if (!patientIds.has(apt.patient_id)) {
-                        patientIds.add(apt.patient_id);
-                        uniquePatients.push(apt.patients);
-                    }
-                });
+                if (patientsError) throw patientsError;
                 
                 const listContainer = document.getElementById('patients-list-content');
                 
-                if (uniquePatients.length === 0) {
+                if (allPatients.length === 0) {
                     listContainer.innerHTML = `
                         <div style="text-align: center; padding: 2rem;">
                             <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
-                            <h3>Aún no tienes pacientes</h3>
-                            <p>Los pacientes aparecerán aquí cuando agenden citas contigo.</p>
+                            <h3>Aún no hay pacientes registrados</h3>
+                            <p>Crea tu primer paciente usando el botón "Nuevo Paciente".</p>
                         </div>
                     `;
                 } else {
+                    // For each patient, check if they have appointments with this doctor
+                    const patientsWithInfo = await Promise.all(
+                        allPatients.map(async (patient) => {
+                            const { data: appointments } = await supabase
+                                .from('appointments')
+                                .select('id')
+                                .eq('patient_id', patient.id)
+                                .eq('doctor_id', currentUser.id);
+                            
+                            return {
+                                ...patient,
+                                hasAppointments: appointments && appointments.length > 0
+                            };
+                        })
+                    );
+                    
                     listContainer.innerHTML = `
                         <div class="table-container">
                             <table class="table">
@@ -1882,18 +1895,28 @@
                                         <th>Teléfono</th>
                                         <th>Email</th>
                                         <th>Edad</th>
+                                        <th>Estado</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${uniquePatients.map(patient => `
+                                    ${patientsWithInfo.map(patient => `
                                         <tr>
                                             <td><strong>${patient.name}</strong></td>
                                             <td>${patient.phone}</td>
                                             <td>${patient.email || 'No registrado'}</td>
                                             <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
                                             <td>
-                                                <button class="btn btn-primary" onclick="viewPatientHistory('${patient.id}')" style="padding: 0.5rem;">
+                                                ${patient.hasAppointments 
+                                                    ? '<span class="status-badge status-confirmed">Con citas</span>' 
+                                                    : '<span class="status-badge status-pending">Sin citas</span>'
+                                                }
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary" onclick="createAppointmentForPatient('${patient.id}', '${patient.name}')" style="padding: 0.5rem; margin-right: 0.5rem;">
+                                                    <i class="fas fa-calendar-plus"></i>
+                                                </button>
+                                                <button class="btn btn-success" onclick="viewPatientHistory('${patient.id}')" style="padding: 0.5rem;">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                             </td>
@@ -1957,11 +1980,16 @@
                 }
                 
                 closeModal('new-patient');
-                showNotification('Paciente creado exitosamente', 'success');
+                showNotification(`Paciente ${data[0].name} creado exitosamente`, 'success');
                 event.target.reset();
                 
-                // Reload doctor data
+                // Reload doctor data and patients list
                 loadDoctorData();
+                
+                // If patients list modal is open, reload it
+                if (document.getElementById('patients-list').style.display === 'block') {
+                    loadPatientsList();
+                }
                 
             } catch (error) {
                 console.error('Error:', error);
@@ -1969,6 +1997,16 @@
             } finally {
                 hideLoading();
             }
+        }
+
+        function createAppointmentForPatient(patientId, patientName) {
+            closeModal('patients-list');
+            openModal('appointment');
+            
+            // Pre-select this patient if it's for a specific patient
+            // Note: The appointment modal is currently for patient self-booking
+            // In a real system, you'd have a doctor-specific appointment creation modal
+            showNotification(`Función pendiente: Crear cita para ${patientName}`, 'info');
         }
 
         async function createNewRecord(event) {
@@ -2011,31 +2049,19 @@
 
         async function loadPatientsForRecord() {
             try {
-                const { data: appointments, error } = await supabase
-                    .from('appointments')
-                    .select(`
-                        patient_id,
-                        patients (id, name)
-                    `)
-                    .eq('doctor_id', currentUser.id);
+                // Load all active patients for medical records
+                const { data: allPatients, error } = await supabase
+                    .from('patients')
+                    .select('id, name')
+                    .eq('status', 'active')
+                    .order('name', { ascending: true });
                 
                 if (error) throw error;
                 
                 const selectElement = document.getElementById('record-patient');
                 selectElement.innerHTML = '<option value="">Seleccionar paciente</option>';
                 
-                // Get unique patients
-                const uniquePatients = [];
-                const patientIds = new Set();
-                
-                appointments.forEach(apt => {
-                    if (!patientIds.has(apt.patient_id)) {
-                        patientIds.add(apt.patient_id);
-                        uniquePatients.push(apt.patients);
-                    }
-                });
-                
-                uniquePatients.forEach(patient => {
+                allPatients.forEach(patient => {
                     const option = document.createElement('option');
                     option.value = patient.id;
                     option.textContent = patient.name;
@@ -2044,20 +2070,328 @@
                 
             } catch (error) {
                 console.error('Error loading patients for record:', error);
+                showNotification('Error al cargar pacientes', 'warning');
             }
         }
 
-        // Patient Functions
-        function showPatientAppointments() {
-            showNotification('Función en desarrollo: Historial completo de citas', 'info');
+        // Patient Functions - Real implementations
+        async function showPatientAppointments() {
+            if (!currentUser || userType !== 'patient') return;
+            
+            showLoading();
+            
+            try {
+                const { data: appointments, error } = await supabase
+                    .from('appointments')
+                    .select(`
+                        *,
+                        doctors (name, specialty)
+                    `)
+                    .eq('patient_id', currentUser.id)
+                    .order('appointment_date', { ascending: false });
+                
+                if (error) throw error;
+                
+                let message = `Tienes ${appointments.length} citas registradas:\n\n`;
+                
+                if (appointments.length === 0) {
+                    message = 'No tienes citas registradas aún.';
+                } else {
+                    appointments.slice(0, 5).forEach(apt => {
+                        message += `• ${formatDateShort(apt.appointment_date)} - ${apt.appointment_time}\n`;
+                        message += `  ${apt.doctors.name} (${getStatusLabel(apt.status)})\n\n`;
+                    });
+                    
+                    if (appointments.length > 5) {
+                        message += `... y ${appointments.length - 5} citas más.`;
+                    }
+                }
+                
+                showNotification(message, 'info');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al cargar historial de citas', 'error');
+            } finally {
+                hideLoading();
+            }
         }
 
-        function showMedicalRecords() {
-            showNotification('Función en desarrollo: Expediente médico completo', 'info');
+        async function showMedicalRecords() {
+            if (!currentUser || userType !== 'patient') return;
+            
+            showLoading();
+            
+            try {
+                const { data: records, error } = await supabase
+                    .from('medical_records')
+                    .select(`
+                        *,
+                        doctors (name, specialty)
+                    `)
+                    .eq('patient_id', currentUser.id)
+                    .order('visit_date', { ascending: false });
+                
+                if (error) throw error;
+                
+                let message = `Tienes ${records.length} consultas en tu expediente:\n\n`;
+                
+                if (records.length === 0) {
+                    message = 'Tu expediente médico está vacío. Después de tu primera consulta aparecerá aquí.';
+                } else {
+                    records.slice(0, 3).forEach(record => {
+                        message += `• ${formatDateShort(record.visit_date)} - ${record.doctors.name}\n`;
+                        message += `  ${record.chief_complaint || 'Consulta general'}\n\n`;
+                    });
+                    
+                    if (records.length > 3) {
+                        message += `... y ${records.length - 3} consultas más.`;
+                    }
+                }
+                
+                showNotification(message, 'info');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al cargar expediente médico', 'error');
+            } finally {
+                hideLoading();
+            }
         }
 
-        function viewPatientHistory(patientId) {
-            showNotification('Función en desarrollo: Historial del paciente', 'info');
+        async function viewPatientHistory(patientId) {
+            openModal('patient-history');
+            showLoading();
+            
+            try {
+                // Load patient basic info
+                const { data: patient, error: patientError } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('id', patientId)
+                    .single();
+                
+                if (patientError) throw patientError;
+                
+                // Load patient appointments
+                const { data: appointments, error: appointmentsError } = await supabase
+                    .from('appointments')
+                    .select(`
+                        *,
+                        doctors (name, specialty)
+                    `)
+                    .eq('patient_id', patientId)
+                    .order('appointment_date', { ascending: false });
+                
+                if (appointmentsError) throw appointmentsError;
+                
+                // Load medical records
+                const { data: records, error: recordsError } = await supabase
+                    .from('medical_records')
+                    .select(`
+                        *,
+                        doctors (name, specialty)
+                    `)
+                    .eq('patient_id', patientId)
+                    .order('visit_date', { ascending: false });
+                
+                if (recordsError) throw recordsError;
+                
+                const historyContent = document.getElementById('patient-history-content');
+                historyContent.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2><i class="fas fa-user"></i> ${patient.name}</h2>
+                        <button class="btn btn-primary" onclick="addConsultationForPatient('${patient.id}', '${patient.name}')">
+                            <i class="fas fa-plus"></i> Nueva Consulta
+                        </button>
+                    </div>
+                    
+                    <!-- Patient Info -->
+                    <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                            <i class="fas fa-info-circle"></i> Información Personal
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div><strong>Teléfono:</strong> ${patient.phone}</div>
+                            <div><strong>Email:</strong> ${patient.email || 'No registrado'}</div>
+                            <div><strong>Fecha de Nacimiento:</strong> ${patient.date_of_birth || 'No registrada'}</div>
+                            <div><strong>Edad:</strong> ${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</div>
+                            <div><strong>Género:</strong> ${getGenderLabel(patient.gender)}</div>
+                            <div><strong>Registro:</strong> ${formatDate(patient.created_at)}</div>
+                        </div>
+                        ${patient.emergency_contact ? `
+                            <div style="margin-top: 1rem;">
+                                <strong>Contacto de Emergencia:</strong> ${patient.emergency_contact}
+                            </div>
+                        ` : ''}
+                        ${patient.address ? `
+                            <div style="margin-top: 1rem;">
+                                <strong>Dirección:</strong> ${patient.address}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- Medical Records -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                            <i class="fas fa-file-medical"></i> Expediente Médico (${records.length})
+                        </h3>
+                        ${records.length === 0 ? `
+                            <div style="text-align: center; padding: 2rem; background: var(--light-bg); border-radius: 10px;">
+                                <i class="fas fa-file-medical" style="font-size: 2rem; color: #ccc; margin-bottom: 1rem;"></i>
+                                <p>No hay consultas médicas registradas</p>
+                                <button class="btn btn-primary" onclick="addConsultationForPatient('${patient.id}', '${patient.name}')" style="margin-top: 1rem;">
+                                    <i class="fas fa-plus"></i> Primera Consulta
+                                </button>
+                            </div>
+                        ` : `
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Médico</th>
+                                            <th>Motivo</th>
+                                            <th>Diagnóstico</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${records.map(record => `
+                                            <tr>
+                                                <td><strong>${formatDateShort(record.visit_date)}</strong></td>
+                                                <td>${record.doctors.name}</td>
+                                                <td>${record.chief_complaint || 'No especificado'}</td>
+                                                <td>${record.diagnosis || 'Pendiente'}</td>
+                                                <td>
+                                                    <button class="btn btn-primary" onclick="viewRecordDetail('${record.id}')" style="padding: 0.5rem;">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                    
+                    <!-- Appointments History -->
+                    <div>
+                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                            <i class="fas fa-calendar-alt"></i> Historial de Citas (${appointments.length})
+                        </h3>
+                        ${appointments.length === 0 ? `
+                            <div style="text-align: center; padding: 2rem; background: var(--light-bg); border-radius: 10px;">
+                                <i class="fas fa-calendar-alt" style="font-size: 2rem; color: #ccc; margin-bottom: 1rem;"></i>
+                                <p>No hay citas registradas</p>
+                            </div>
+                        ` : `
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Hora</th>
+                                            <th>Médico</th>
+                                            <th>Tipo</th>
+                                            <th>Estado</th>
+                                            <th>Notas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${appointments.map(apt => `
+                                            <tr>
+                                                <td><strong>${formatDateShort(apt.appointment_date)}</strong></td>
+                                                <td>${apt.appointment_time}</td>
+                                                <td>${apt.doctors.name}</td>
+                                                <td>${getTypeLabel(apt.type)}</td>
+                                                <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+                                                <td>${apt.notes || '-'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `}
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al cargar historial del paciente', 'error');
+                document.getElementById('patient-history-content').innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--error); margin-bottom: 1rem;"></i>
+                        <h3>Error al cargar historial</h3>
+                        <p>No se pudo cargar la información del paciente</p>
+                    </div>
+                `;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function addConsultationForPatient(patientId, patientName) {
+            closeModal('patient-history');
+            openModal('new-record');
+            
+            // Pre-select the patient
+            const patientSelect = document.getElementById('record-patient');
+            if (patientSelect) {
+                // Add the patient to the select if not already there
+                let optionExists = false;
+                for (let option of patientSelect.options) {
+                    if (option.value === patientId) {
+                        option.selected = true;
+                        optionExists = true;
+                        break;
+                    }
+                }
+                
+                if (!optionExists) {
+                    const option = document.createElement('option');
+                    option.value = patientId;
+                    option.textContent = patientName;
+                    option.selected = true;
+                    patientSelect.appendChild(option);
+                }
+            }
+        }
+
+        function viewRecordDetail(recordId) {
+            showNotification('Función en desarrollo: Ver detalle del expediente', 'info');
+        }
+
+        function addConsultationForPatient(patientId, patientName) {
+            closeModal('patient-history');
+            openModal('new-record');
+            
+            // Pre-select the patient
+            const patientSelect = document.getElementById('record-patient');
+            if (patientSelect) {
+                // Add the patient to the select if not already there
+                let optionExists = false;
+                for (let option of patientSelect.options) {
+                    if (option.value === patientId) {
+                        option.selected = true;
+                        optionExists = true;
+                        break;
+                    }
+                }
+                
+                if (!optionExists) {
+                    const option = document.createElement('option');
+                    option.value = patientId;
+                    option.textContent = patientName;
+                    option.selected = true;
+                    patientSelect.appendChild(option);
+                }
+            }
+        }
+
+        function viewRecordDetail(recordId) {
+            showNotification('Función en desarrollo: Ver detalle completo del expediente', 'info');
         }
 
         function calculateAge(birthDate) {
