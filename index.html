@@ -2516,6 +2516,7 @@ async function showTodayAppointments() {
                                 <th>Paciente</th>
                                 <th>Teléfono</th>
                                 <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2525,6 +2526,34 @@ async function showTodayAppointments() {
                                     <td>${apt.patients?.name || 'Sin nombre'}</td>
                                     <td>${apt.patients?.phone || 'Sin teléfono'}</td>
                                     <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+<td>
+    ${apt.status === 'pending' ? `
+        <button class="btn btn-success" onclick="updateAppointmentStatus('${apt.id}', 'confirmed')" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem; font-size: 0.8rem;">
+            <i class="fas fa-check"></i> Confirmar
+        </button>
+        <button class="btn btn-outline" onclick="updateAppointmentStatus('${apt.id}', 'cancelled')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; color: var(--error); border-color: var(--error);">
+            <i class="fas fa-times"></i> Cancelar
+        </button>
+    ` : ''}
+    ${apt.status === 'confirmed' ? `
+        <button class="btn btn-primary" onclick="updateAppointmentStatus('${apt.id}', 'completed')" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem; font-size: 0.8rem;">
+            <i class="fas fa-user-check"></i> Completar
+        </button>
+        <button class="btn btn-outline" onclick="updateAppointmentStatus('${apt.id}', 'cancelled')" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; color: var(--error); border-color: var(--error);">
+            <i class="fas fa-times"></i> Cancelar
+        </button>
+    ` : ''}
+    ${apt.status === 'completed' ? `
+        <span style="color: var(--success); font-weight: bold;">
+            <i class="fas fa-check-circle"></i> Completada
+        </span>
+    ` : ''}
+    ${apt.status === 'cancelled' ? `
+        <span style="color: var(--error); font-weight: bold;">
+            <i class="fas fa-ban"></i> Cancelada
+        </span>
+    ` : ''}
+</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -2662,7 +2691,41 @@ function getTypeLabel(type) {
     };
     return labels[type] || type;
 }
-
+async function updateAppointmentStatus(appointmentId, newStatus) {
+    if (!currentUser || userType !== 'doctor') {
+        showNotification('Debes estar logueado como doctor', 'warning');
+        return;
+    }
+    
+    showLoading();
+    
+    try {
+        const { data, error } = await supabase
+            .from('appointments')
+            .update({ status: newStatus })
+            .eq('id', appointmentId)
+            .select();
+        
+        if (error) throw error;
+        
+        const statusLabels = {
+            'confirmed': 'confirmada',
+            'completed': 'completada', 
+            'cancelled': 'cancelada'
+        };
+        
+        showNotification(`Cita ${statusLabels[newStatus]} exitosamente`, 'success');
+        
+        // Recargar la agenda para mostrar cambios
+        showTodayAppointments();
+        
+    } catch (error) {
+        console.error('Error updating appointment:', error);
+        showNotification('Error al actualizar la cita', 'error');
+    } finally {
+        hideLoading();
+    }
+}
           </script>
 </body>
 </html>
