@@ -2640,9 +2640,29 @@ function searchPatients() {
         }
     });
 }
+
+// Agregar esta función que falta (antes del cierre 
+
+function getStatusLabel(status) {
+    const labels = {
+        'pending': 'Pendiente',
+        'confirmed': 'Confirmada',
+        'completed': 'Completada',
+        'cancelled': 'Cancelada'
+    };
+    return labels[status] || status;
+}
+
+function getTypeLabel(type) {
+    const labels = {
+        'general': 'Consulta General',
+        'followup': 'Seguimiento',
+        'checkup': 'Chequeo Preventivo',
+        'chronic': 'Control Crónico'
+    };
+    return labels[type] || type;
+}
+
           </script>
 </body>
 </html>
-
-
-
