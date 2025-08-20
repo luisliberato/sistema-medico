@@ -2192,41 +2192,51 @@
             }
         }
 
-        async function loadDoctorData() {
-            if (!currentUser || userType !== 'doctor') return;
-            
-            document.getElementById('doctor-name').textContent = `- ${currentUser.name}`;
-            
-            try {
-                const today = new Date().toISOString().split('T')[0];
-                
-                // Load today's appointments
-                const { data: todayAppointments, error: todayError } = await supabase
-                    .from('appointments')
-                    .select('*')
-                    .eq('doctor_id', currentUser.id)
-                    .eq('appointment_date', today);
-                
-                if (todayError) throw todayError;
-                document.getElementById('today-appointments-count').textContent = todayAppointments.length;
-                
-                // Load total active patients
-                const { data: allPatients, error: patientsError } = await supabase
-                    .from('patients')
-                    .select('id')
-                    .eq('status', 'active');
-                
-                if (patientsError) throw patientsError;
-                document.getElementById('total-patients-count').textContent = allPatients.length;
-                
-                // Load week appointments
-                const startOfWeek = new Date();
-                startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-                const endOfWeek = new Date(startOfWeek);
-                endOfWeek.setDate(startOfWeek.getDate() + 6);
-                
-                const { data: weekAppointments, error: weekError } = await supabase
-                    .from('appointments')
-                    .select('*')
-                    .eq('doctor_id', currentUser.id)
-                    .gte('appointment_date', startOfWeek.toISOString
+       async function loadDoctorData() {
+    if (!currentUser || userType !== 'doctor') return;
+
+    document.getElementById('doctor-name').textContent = `- ${currentUser.name}`;
+
+    try {
+        const today = new Date().toISOString().split('T')[0];
+
+        // Cargar citas de hoy
+        const { data: todayAppointments, error: todayError } = await supabase
+            .from('appointments')
+            .select('*')
+            .eq('doctor_id', currentUser.id)
+            .eq('appointment_date', today);
+
+        if (todayError) throw todayError;
+        document.getElementById('today-appointments-count').textContent = todayAppointments.length;
+
+        // Cargar pacientes activos
+        const { data: allPatients, error: patientsError } = await supabase
+            .from('patients')
+            .select('id')
+            .eq('status', 'active');
+
+        if (patientsError) throw patientsError;
+        document.getElementById('total-patients-count').textContent = allPatients.length;
+
+        // Cargar citas de la semana
+        const startOfWeek = new Date();
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+        const { data: weekAppointments, error: weekError } = await supabase
+            .from('appointments')
+            .select('*')
+            .eq('doctor_id', currentUser.id)
+            .gte('appointment_date', startOfWeek.toISOString().split('T')[0])
+            .lte('appointment_date', endOfWeek.toISOString().split('T')[0]);
+
+        if (weekError) throw weekError;
+        document.getElementById('week-appointments-count').textContent = weekAppointments.length;
+
+    } catch (error) {
+        console.error('Error loading doctor data:', error);
+        showNotification('Error al cargar datos del médico', 'warning');
+    }
+}
