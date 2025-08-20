@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultorio Médico Familiar - Sistema Completo</title>
+    <title>TuCliniCard - Sistema Médico Familiar Completo</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -32,7 +32,9 @@
             background: var(--light-bg);
         }
 
-        /* Loading Spinner */
+        /* ========================================= */
+        /*              LOADING SPINNER              */
+        /* ========================================= */
         .loading {
             display: none;
             position: fixed;
@@ -60,7 +62,9 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Header */
+        /* ========================================= */
+        /*                  HEADER                   */
+        /* ========================================= */
         .header {
             background: var(--white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -116,6 +120,9 @@
             gap: 1rem;
         }
 
+        /* ========================================= */
+        /*                 BUTTONS                   */
+        /* ========================================= */
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -170,13 +177,17 @@
             transform: translateY(-2px);
         }
 
-        /* Main Container */
+        /* ========================================= */
+        /*              MAIN CONTAINER               */
+        /* ========================================= */
         .main-container {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
         }
 
-        /* Landing Page Styles */
+        /* ========================================= */
+        /*               LANDING PAGE                */
+        /* ========================================= */
         .hero {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-teal) 100%);
             color: white;
@@ -213,7 +224,9 @@
             font-size: 1.1rem;
         }
 
-        /* Section Styles */
+        /* ========================================= */
+        /*               SECTION STYLES              */
+        /* ========================================= */
         .section {
             padding: 4rem 2rem;
         }
@@ -241,7 +254,9 @@
             margin: 0 auto;
         }
 
-        /* Doctors Section */
+        /* ========================================= */
+        /*              DOCTORS SECTION              */
+        /* ========================================= */
         .doctors {
             background: var(--light-bg);
         }
@@ -276,6 +291,8 @@
             justify-content: center;
             font-size: 4rem;
             color: white;
+            background-size: cover;
+            background-position: center;
         }
 
         .doctor-card h3 {
@@ -296,7 +313,9 @@
             line-height: 1.8;
         }
 
-        /* Services Section */
+        /* ========================================= */
+        /*             SERVICES SECTION              */
+        /* ========================================= */
         .services {
             background: white;
         }
@@ -346,7 +365,9 @@
             line-height: 1.6;
         }
 
-        /* Features Section */
+        /* ========================================= */
+        /*             FEATURES SECTION              */
+        /* ========================================= */
         .features {
             background: var(--light-bg);
         }
@@ -380,7 +401,9 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Contact Section */
+        /* ========================================= */
+        /*             CONTACT SECTION               */
+        /* ========================================= */
         .contact {
             background: var(--primary-blue);
             color: white;
@@ -414,7 +437,43 @@
             justify-content: center;
         }
 
-        /* Footer */
+        /* ========================================= */
+        /*              SOCIAL MEDIA                 */
+        /* ========================================= */
+        .social-media {
+            background: #1f2937;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .social-link:hover {
+            color: var(--secondary-teal);
+        }
+
+        .social-link i {
+            font-size: 1.5rem;
+        }
+
+        /* ========================================= */
+        /*                 FOOTER                    */
+        /* ========================================= */
         .footer {
             background: #1f2937;
             color: white;
@@ -422,7 +481,9 @@
             padding: 2rem;
         }
 
-        /* Dashboard Styles */
+        /* ========================================= */
+        /*             DASHBOARD STYLES              */
+        /* ========================================= */
         .dashboard {
             display: none;
             padding: 2rem;
@@ -499,7 +560,9 @@
             margin-top: 0.5rem;
         }
 
-        /* Modal Styles */
+        /* ========================================= */
+        /*               MODAL STYLES                */
+        /* ========================================= */
         .modal {
             display: none;
             position: fixed;
@@ -570,7 +633,9 @@
             min-height: 100px;
         }
 
-        /* Notification */
+        /* ========================================= */
+        /*              NOTIFICATIONS                */
+        /* ========================================= */
         .notification {
             position: fixed;
             top: 20px;
@@ -605,7 +670,62 @@
             background: var(--warning);
         }
 
-        /* Responsive */
+        /* ========================================= */
+        /*               TABLE STYLES                */
+        /* ========================================= */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background: var(--light-bg);
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-cancelled {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        /* ========================================= */
+        /*               RESPONSIVE                  */
+        /* ========================================= */
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
@@ -646,6 +766,12 @@
             .section-title h2 {
                 font-size: 2rem;
             }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -660,11 +786,11 @@
         <nav class="nav-container">
             <div class="logo" onclick="showLandingPage()">
                 <i class="fas fa-user-md"></i>
-                Consultorio Médico Familiar
+                TuCliniCard
             </div>
             <ul class="nav-menu">
                 <li><a onclick="showLandingPage()">Inicio</a></li>
-                <li><a onclick="scrollToSection('doctors')">Doctoras</a></li>
+                <li><a onclick="scrollToSection('doctors')">Doctores</a></li>
                 <li><a onclick="scrollToSection('services')">Servicios</a></li>
                 <li><a onclick="scrollToSection('contact')">Contacto</a></li>
             </ul>
@@ -686,7 +812,7 @@
             <section class="hero">
                 <div class="hero-content">
                     <h1>Atención Médica de Confianza</h1>
-                    <p>Consultas presenciales y telemedicina con médicas especialistas certificadas. Tu salud es nuestra prioridad, brindamos atención personalizada y de calidad.</p>
+                    <p>Consultas presenciales y telemedicina con médicos especialistas certificados. Tu salud es nuestra prioridad, brindamos atención personalizada y de calidad.</p>
                     <div class="hero-buttons">
                         <button class="btn btn-hero btn-white" onclick="openModal('appointment')">
                             <i class="fas fa-calendar-plus"></i> Agendar Cita
@@ -702,13 +828,13 @@
             <section class="section doctors" id="doctors">
                 <div class="container">
                     <div class="section-title">
-                        <h2>Nuestras Especialistas</h2>
-                        <p>Médicas con amplia experiencia y dedicación al cuidado integral de tu salud y la de tu familia</p>
+                        <h2>Nuestro Equipo Médico</h2>
+                        <p>Especialistas certificados con amplia experiencia, dedicados al cuidado integral de tu salud y la de tu familia</p>
                     </div>
                     <div class="doctors-grid">
+                        <!-- Dra. María García -->
                         <div class="doctor-card">
-                            <div class="doctor-photo">
-                                <i class="fas fa-user-md"></i>
+                            <div class="doctor-photo" style="background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face');">
                             </div>
                             <h3>Dra. María García</h3>
                             <div class="specialty">Medicina Familiar</div>
@@ -723,9 +849,10 @@
                                 <i class="fas fa-calendar"></i> Agendar Cita
                             </button>
                         </div>
+                        
+                        <!-- Dra. Ana Rodríguez -->
                         <div class="doctor-card">
-                            <div class="doctor-photo">
-                                <i class="fas fa-user-md"></i>
+                            <div class="doctor-photo" style="background-image: url('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face');">
                             </div>
                             <h3>Dra. Ana Rodríguez</h3>
                             <div class="specialty">Medicina Interna</div>
@@ -740,6 +867,78 @@
                                 <i class="fas fa-calendar"></i> Agendar Cita
                             </button>
                         </div>
+                        
+                        <!-- Dra. Carmen Jiménez -->
+                        <div class="doctor-card">
+                            <div class="doctor-photo" style="background-image: url('https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face');">
+                            </div>
+                            <h3>Dra. Carmen Jiménez</h3>
+                            <div class="specialty">Pediatría Neonatal</div>
+                            <div class="credentials">
+                                • Pediatría y Neonatología<br>
+                                • 10 años de experiencia<br>
+                                • Especialista en cuidados intensivos neonatales<br>
+                                • Certificada en reanimación pediátrica<br>
+                                • Experta en desarrollo infantil temprano
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('appointment')">
+                                <i class="fas fa-calendar"></i> Agendar Cita
+                            </button>
+                        </div>
+                        
+                        <!-- Dr. Luis Martínez -->
+                        <div class="doctor-card">
+                            <div class="doctor-photo" style="background-image: url('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face');">
+                            </div>
+                            <h3>Dr. Luis Martínez</h3>
+                            <div class="specialty">Psicología/Psiquiatría</div>
+                            <div class="credentials">
+                                • Psicología Clínica y Psiquiatría<br>
+                                • 8 años de experiencia<br>
+                                • Especialista en terapia cognitivo-conductual<br>
+                                • Certificado en salud mental familiar<br>
+                                • Experto en ansiedad y depresión
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('appointment')">
+                                <i class="fas fa-calendar"></i> Agendar Cita
+                            </button>
+                        </div>
+                        
+                        <!-- Dra. Ricardo Herrera -->
+                        <div class="doctor-card">
+                            <div class="doctor-photo" style="background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face');">
+                            </div>
+                            <h3>Dra. Ricardo Herrera</h3>
+                            <div class="specialty">Nutrición</div>
+                            <div class="credentials">
+                                • Nutrición Clínica y Deportiva<br>
+                                • 7 años de experiencia<br>
+                                • Especialista en planes alimentarios personalizados<br>
+                                • Certificada en nutrición pediátrica<br>
+                                • Experta en control de peso y diabetes
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('appointment')">
+                                <i class="fas fa-calendar"></i> Agendar Cita
+                            </button>
+                        </div>
+                        
+                        <!-- Dr. Ángel Rodríguez -->
+                        <div class="doctor-card">
+                            <div class="doctor-photo" style="background-image: url('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face');">
+                            </div>
+                            <h3>Dr. Ángel Rodríguez</h3>
+                            <div class="specialty">Ortopedia y Traumatología</div>
+                            <div class="credentials">
+                                • Ortopedia y Traumatología<br>
+                                • 14 años de experiencia<br>
+                                • Especialista en cirugía de columna vertebral<br>
+                                • Certificado en artroscopia de rodilla y hombro<br>
+                                • Experto en medicina deportiva y rehabilitación
+                            </div>
+                            <button class="btn btn-primary" onclick="openModal('appointment')">
+                                <i class="fas fa-calendar"></i> Agendar Cita
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -748,8 +947,8 @@
             <section class="section services" id="services">
                 <div class="container">
                     <div class="section-title">
-                        <h2>Nuestros Servicios</h2>
-                        <p>Atención médica integral para toda la familia con tecnología moderna y trato personalizado</p>
+                        <h2>Nuestros Servicios Médicos</h2>
+                        <p>Atención médica integral especializada con tecnología moderna y trato personalizado para toda la familia</p>
                     </div>
                     <div class="services-grid">
                         <div class="service-card">
@@ -759,6 +958,7 @@
                             <h3>Consulta General</h3>
                             <p>Evaluación médica completa, diagnóstico preciso y tratamiento personalizado para enfermedades comunes. Atención integral para adultos y adolescentes.</p>
                         </div>
+                        
                         <div class="service-card">
                             <div class="service-icon">
                                 <i class="fas fa-video"></i>
@@ -766,6 +966,7 @@
                             <h3>Telemedicina</h3>
                             <p>Consultas médicas virtuales seguras desde la comodidad de tu hogar. Ideal para seguimientos, consultas preventivas y urgencias menores.</p>
                         </div>
+                        
                         <div class="service-card">
                             <div class="service-icon">
                                 <i class="fas fa-heartbeat"></i>
@@ -773,6 +974,7 @@
                             <h3>Medicina Preventiva</h3>
                             <p>Chequeos regulares, vacunación, detección temprana de enfermedades y programas de prevención personalizados según tu edad y riesgo.</p>
                         </div>
+                        
                         <div class="service-card">
                             <div class="service-icon">
                                 <i class="fas fa-pills"></i>
@@ -780,6 +982,7 @@
                             <h3>Seguimiento Crónico</h3>
                             <p>Manejo especializado de enfermedades crónicas como diabetes, hipertensión, colesterol alto y seguimiento de tratamientos a largo plazo.</p>
                         </div>
+                        
                         <div class="service-card">
                             <div class="service-icon">
                                 <i class="fas fa-baby"></i>
@@ -787,12 +990,29 @@
                             <h3>Medicina Familiar</h3>
                             <p>Atención médica integral para toda la familia, desde adolescentes hasta adultos mayores, con enfoque en la salud familiar completa.</p>
                         </div>
+                        
                         <div class="service-card">
                             <div class="service-icon">
-                                <i class="fas fa-clipboard-check"></i>
+                                <i class="fas fa-file-medical"></i>
                             </div>
                             <h3>Exámenes de Salud</h3>
                             <p>Evaluaciones médicas completas, certificados de salud para trabajo o estudios, y chequeos ejecutivos con reporte detallado.</p>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>Psicología/Psiquiatría</h3>
+                            <p>Atención integral de salud mental, terapia psicológica, manejo de ansiedad, depresión y trastornos emocionales para toda la familia.</p>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <h3>Nutrición</h3>
+                            <p>Planes alimentarios personalizados, control de peso, nutrición terapéutica y asesoría nutricional para un estilo de vida saludable.</p>
                         </div>
                     </div>
                 </div>
@@ -838,6 +1058,100 @@
                 </div>
             </section>
 
+            <!-- Coming Soon Section -->
+            <section class="section" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                <div class="container">
+                    <div class="section-title">
+                        <h2 style="color: var(--primary-blue);">🚀 Próximamente - Funcionalidades Avanzadas</h2>
+                        <p>Estamos desarrollando herramientas que revolucionarán tu experiencia médica</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                        <!-- Historial Clínico -->
+                        <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--accent-green);">
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                                <i class="fas fa-file-medical-alt"></i> Historial Clínico Digital
+                            </h3>
+                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                                <strong>Ejemplo de registro:</strong><br>
+                                📅 <strong>15/08/2024</strong> - Dra. María García<br>
+                                🏥 <strong>Motivo:</strong> Control diabetes tipo 2<br>
+                                📊 <strong>Glucosa:</strong> 120 mg/dl ✅<br>
+                                💊 <strong>Tratamiento:</strong> Metformina 850mg<br>
+                                📝 <strong>Próximo control:</strong> 3 meses
+                            </div>
+                            <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-gray);">
+                                <li>Datos básicos siempre actualizados</li>
+                                <li>Notas médicas privadas para cada doctor</li>
+                                <li>Carga de estudios (laboratorios, rayos X)</li>
+                                <li>Historial de medicamentos y alergias</li>
+                            </ul>
+                            <div style="margin-top: 1rem; padding: 0.5rem; background: #d1fae5; border-radius: 6px; font-size: 0.8rem; color: #065f46;">
+                                <strong>🚀 Lanzamiento:</strong> Febrero 2025
+                            </div>
+                        </div>
+
+                        <!-- Recordatorios -->
+                        <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--secondary-teal);">
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                                <i class="fas fa-bell"></i> Recordatorios Inteligentes
+                            </h3>
+                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                                <strong>Ejemplos de notificaciones:</strong><br>
+                                📱 <strong>WhatsApp:</strong> "Hola Juan, tienes cita mañana a las 3:00 PM con Dra. García. Confirma con ✅"<br><br>
+                                📧 <strong>Email:</strong> "Recordatorio: Cita médica confirmada para el 20/01/2025"<br><br>
+                                🎂 <strong>Cumpleaños:</strong> "¡Feliz cumpleaños! 🎉 Que tengas un año lleno de salud"
+                            </div>
+                            <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-gray);">
+                                <li>WhatsApp con links seguros al portal</li>
+                                <li>Email y SMS automáticos</li>
+                                <li>Confirmación de citas en un clic</li>
+                                <li>Mensajes de cumpleaños personalizados</li>
+                            </ul>
+                            <div style="margin-top: 1rem; padding: 0.5rem; background: #dbeafe; border-radius: 6px; font-size: 0.8rem; color: #1e40af;">
+                                <strong>🚀 Lanzamiento:</strong> Marzo 2025
+                            </div>
+                        </div>
+
+                        <!-- Videoconsulta -->
+                        <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 5px solid var(--primary-blue);">
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                                <i class="fas fa-video"></i> Videoconsultas Seguras
+                            </h3>
+                            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+                                <strong>Características:</strong><br>
+                                🔒 <strong>Encriptación:</strong> Comunicación 100% segura<br>
+                                📎 <strong>Archivos:</strong> Comparte laboratorios en PDF<br>
+                                💬 <strong>Chat:</strong> Mensajes durante la consulta<br>
+                                📹 <strong>Grabación:</strong> Opcional para seguimiento
+                            </div>
+                            <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-gray);">
+                                <li>Desde cualquier dispositivo</li>
+                                <li>Ideal para seguimientos y controles</li>
+                                <li>Recetas digitales válidas</li>
+                                <li>Ahorra tiempo y traslados</li>
+                            </ul>
+                            <div style="margin-top: 1rem; padding: 0.5rem; background: #fef3c7; border-radius: 6px; font-size: 0.8rem; color: #92400e;">
+                                <strong>🚀 Lanzamiento:</strong> Abril 2025
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div style="background: white; border-radius: 15px; padding: 2rem; text-align: center;">
+                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">Progreso de Desarrollo</h3>
+                        <div style="background: #e5e7eb; height: 10px; border-radius: 10px; margin: 1rem 0;">
+                            <div style="background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-teal) 100%); height: 100%; width: 75%; border-radius: 10px; transition: width 0.3s;"></div>
+                        </div>
+                        <p style="color: var(--text-gray); margin: 0;"><strong>75% completado</strong> - Sistema base funcional con autenticación real implementada.</p>
+                        
+                        <div style="margin-top: 2rem; padding: 1rem; background: #f0f8ff; border-radius: 10px;">
+                            <p style="margin: 0; color: var(--primary-blue);"><strong>💡 ¿Tienes sugerencias?</strong> Contacta con nosotros para influir en el desarrollo de estas funcionalidades.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Contact Section -->
             <section class="section contact" id="contact">
                 <div class="container">
@@ -858,7 +1172,7 @@
                             <i class="fas fa-envelope"></i>
                             <div>
                                 <strong>Email</strong><br>
-                                contacto@consultoriomedico.com<br>
+                                contacto@tuclinicard.com<br>
                                 <small>Respuesta en 24 horas</small>
                             </div>
                         </div>
@@ -1005,15 +1319,46 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer" id="landing-footer">
+    <!-- Social Media & Footer -->
+    <div class="social-media" id="landing-footer">
         <div class="container">
-            <p>&copy; 2024 Consultorio Médico Familiar. Todos los derechos reservados.</p>
+            <h3 style="margin-bottom: 1rem;">Síguenos en nuestras redes</h3>
+            <div class="social-links">
+                <a href="https://instagram.com/tuclinicard" target="_blank" class="social-link">
+                    <i class="fab fa-instagram"></i>
+                    @tuclinicard
+                </a>
+                <a href="https://facebook.com/tuclinicard" target="_blank" class="social-link">
+                    <i class="fab fa-facebook"></i>
+                    TuCliniCard
+                </a>
+                <a href="https://twitter.com/tuclinicard" target="_blank" class="social-link">
+                    <i class="fab fa-twitter"></i>
+                    @tuclinicard
+                </a>
+                <a href="https://linkedin.com/company/tuclinicard" target="_blank" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                    TuCliniCard
+                </a>
+                <a href="https://wa.me/18095550124" target="_blank" class="social-link">
+                    <i class="fab fa-whatsapp"></i>
+                    WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 TuCliniCard - Consultorio Médico Familiar. Todos los derechos reservados.</p>
             <p>Sistema certificado bajo estándares de seguridad médica y protección de datos</p>
         </div>
     </footer>
 
-    <!-- Modals -->
+    <!-- ========================================= -->
+    <!--                  MODALS                   -->
+    <!-- ========================================= -->
+    
     <!-- Patient Login Modal -->
     <div id="patient-login" class="modal">
         <div class="modal-content">
@@ -1022,13 +1367,13 @@
             <form id="patient-login-form" onsubmit="loginPatient(event)">
                 <div class="form-group">
                     <label for="patient-email">Email:</label>
-                    <input type="email" id="patient-email" name="email" required placeholder="paciente@ejemplo.com">
-                    <small style="color: #666;">Prueba: paciente@ejemplo.com</small>
+                    <input type="email" id="patient-email" name="email" required placeholder="juan.perez@test.com">
+                    <small style="color: #666;">Prueba: juan.perez@test.com</small>
                 </div>
                 <div class="form-group">
                     <label for="patient-password">Contraseña:</label>
-                    <input type="password" id="patient-password" name="password" required placeholder="paciente123">
-                    <small style="color: #666;">Prueba: paciente123</small>
+                    <input type="password" id="patient-password" name="password" required placeholder="test123">
+                    <small style="color: #666;">Prueba: test123</small>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">
                     <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
@@ -1115,7 +1460,7 @@
         </div>
     </div>
 
-            <!-- Appointment Modal -->
+    <!-- Appointment Modal -->
     <div id="appointment" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('appointment')">&times;</span>
@@ -1177,84 +1522,115 @@
         </div>
     </div>
 
-    <!-- Today's Appointments Modal -->
-    <div id="today-appointments" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('today-appointments')">&times;</span>
-            <h2><i class="fas fa-calendar-day"></i> Agenda de Hoy</h2>
-            <div id="today-appointments-list">
-                <p>Cargando citas del día...</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Patients List Modal -->
-    <div id="patients-list" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('patients-list')">&times;</span>
-            <h2><i class="fas fa-users"></i> Mis Pacientes</h2>
-            <div class="form-group">
-                <input type="text" id="patient-search" placeholder="Buscar paciente por nombre, teléfono o email..." onkeyup="searchPatients()">
-            </div>
-            <div id="patients-list-content">
-                <p>Cargando lista de pacientes...</p>
-            </div>
-        </div>
-    </div>
-
     <!-- New Patient Modal -->
     <div id="new-patient" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('new-patient')">&times;</span>
             <h2><i class="fas fa-user-plus"></i> Nuevo Paciente</h2>
             <form id="new-patient-form" onsubmit="createNewPatient(event)">
-                <div class="form-group">
-                    <label for="new-patient-name">Nombre Completo:</label>
-                    <input type="text" id="new-patient-name" name="name" required placeholder="Nombre completo del paciente">
+                <!-- Información Personal -->
+                <div style="border-bottom: 2px solid var(--light-bg); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                        <i class="fas fa-user"></i> Información Personal
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="new-patient-name">Nombre Completo: <span style="color: red;">*</span></label>
+                        <input type="text" id="new-patient-name" name="name" required placeholder="Nombre completo del paciente">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="new-patient-email">Email:</label>
+                            <input type="email" id="new-patient-email" name="email" placeholder="email@ejemplo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-patient-phone">Teléfono: <span style="color: red;">*</span></label>
+                            <input type="tel" id="new-patient-phone" name="phone" required placeholder="(809) 555-0123">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="new-patient-birth">Fecha de Nacimiento:</label>
+                            <input type="date" id="new-patient-birth" name="date_of_birth">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-patient-gender">Género:</label>
+                            <select id="new-patient-gender" name="gender">
+                                <option value="">Seleccionar</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                                <option value="Other">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-patient-address">Dirección:</label>
+                        <textarea id="new-patient-address" name="address" rows="2" placeholder="Dirección completa del paciente"></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="new-patient-email">Email:</label>
-                    <input type="email" id="new-patient-email" name="email" placeholder="email@ejemplo.com">
+                
+                <!-- Contacto de Emergencia -->
+                <div style="border-bottom: 2px solid var(--light-bg); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--secondary-teal); margin-bottom: 1rem;">
+                        <i class="fas fa-phone-alt"></i> Contacto de Emergencia
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="emergency-name">Nombre del Contacto:</label>
+                        <input type="text" id="emergency-name" name="emergency_name" placeholder="Nombre completo de la persona de contacto">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="emergency-phone">Teléfono de Emergencia:</label>
+                            <input type="tel" id="emergency-phone" name="emergency_phone" placeholder="(809) 555-0000">
+                        </div>
+                        <div class="form-group">
+                            <label for="emergency-email">Email de Contacto:</label>
+                            <input type="email" id="emergency-email" name="emergency_email" placeholder="contacto@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emergency-relationship">Parentesco/Relación:</label>
+                        <select id="emergency-relationship" name="emergency_relationship">
+                            <option value="">Seleccionar relación</option>
+                            <option value="Padre">Padre</option>
+                            <option value="Madre">Madre</option>
+                            <option value="Esposo/a">Esposo/a</option>
+                            <option value="Hijo/a">Hijo/a</option>
+                            <option value="Hermano/a">Hermano/a</option>
+                            <option value="Amigo/a">Amigo/a</option>
+                            <option value="Tutor">Tutor Legal</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="new-patient-phone">Teléfono:</label>
-                    <input type="tel" id="new-patient-phone" name="phone" required placeholder="(809) 555-0123">
+                
+                <!-- Información Adicional -->
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--accent-green); margin-bottom: 1rem;">
+                        <i class="fas fa-notes-medical"></i> Información Adicional
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="insurance-info">Información del Seguro Médico:</label>
+                        <textarea id="insurance-info" name="insurance_info" rows="2" placeholder="Nombre del seguro, número de póliza, etc."></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="new-patient-birth">Fecha de Nacimiento:</label>
-                    <input type="date" id="new-patient-birth" name="date_of_birth">
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" onclick="closeModal('new-patient')" class="btn btn-outline" style="flex: 1;">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success" style="flex: 1;">
+                        <i class="fas fa-user-plus"></i> Crear Paciente
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="new-patient-gender">Género:</label>
-                    <select id="new-patient-gender" name="gender">
-                        <option value="">Seleccionar</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                        <option value="Other">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="new-patient-address">Dirección:</label>
-                    <textarea id="new-patient-address" name="address" placeholder="Dirección completa"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="new-patient-emergency">Contacto de Emergencia:</label>
-                    <input type="text" id="new-patient-emergency" name="emergency_contact" placeholder="Nombre y teléfono de contacto de emergencia">
-                </div>
-                <button type="submit" class="btn btn-success" style="width: 100%;">
-                    <i class="fas fa-user-plus"></i> Crear Paciente
-                </button>
             </form>
-        </div>
-    </div>
-
-    <!-- Patient History Modal -->
-    <div id="patient-history" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <span class="close" onclick="closeModal('patient-history')">&times;</span>
-            <div id="patient-history-content">
-                <p>Cargando historial del paciente...</p>
-            </div>
         </div>
     </div>
 
@@ -1309,18 +1685,62 @@
         </div>
     </div>
 
+    <!-- Today's Appointments Modal -->
+    <div id="today-appointments" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('today-appointments')">&times;</span>
+            <h2><i class="fas fa-calendar-day"></i> Agenda de Hoy</h2>
+            <div id="today-appointments-list">
+                <p>Cargando citas del día...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patients List Modal -->
+    <div id="patients-list" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('patients-list')">&times;</span>
+            <h2><i class="fas fa-users"></i> Mis Pacientes</h2>
+            <div class="form-group">
+                <input type="text" id="patient-search" placeholder="Buscar paciente por nombre, teléfono o email..." onkeyup="searchPatients()">
+            </div>
+            <div id="patients-list-content">
+                <p>Cargando lista de pacientes...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient History Modal -->
+    <div id="patient-history" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close" onclick="closeModal('patient-history')">&times;</span>
+            <div id="patient-history-content">
+                <p>Cargando historial del paciente...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!--              JAVASCRIPT CODE              -->
+    <!-- ========================================= -->
     <script>
-        // Supabase Configuration
+        // ========================================= 
+        //           SUPABASE CONFIGURATION           
+        // ========================================= 
         const SUPABASE_URL = 'https://ooacvnvxuvnhwodpqwoh.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYWN2bnZ4dXZuaHdvZHBxd29oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1ODQ2MDcsImV4cCI6MjA3MTE2MDYwN30.8GXjZfvKlPV-0v3vXglZsvke2U4gGgl4YVtwgfRNNVw';
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Global state
+        // ========================================= 
+        //              GLOBAL STATE                 
+        // ========================================= 
         let currentUser = null;
         let userType = null;
 
-        // Initialize app
+        // ========================================= 
+        //            INITIALIZATION                 
+        // ========================================= 
         document.addEventListener('DOMContentLoaded', function() {
             showLandingPage();
             loadDoctors();
@@ -1328,9 +1748,14 @@
             // Set minimum date for appointments to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('appointment-date').setAttribute('min', today);
+            
+            // Check for existing session
+            checkAuthSession();
         });
 
-        // Utility Functions
+        // ========================================= 
+        //             UTILITY FUNCTIONS             
+        // ========================================= 
         function showLoading() {
             document.getElementById('loading').style.display = 'flex';
         }
@@ -1350,10 +1775,12 @@
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => notification.remove(), 300);
-            }, 3000);
+            }, 4000);
         }
 
-        // Navigation Functions
+        // ========================================= 
+        //            NAVIGATION FUNCTIONS           
+        // ========================================= 
         function showLandingPage() {
             document.getElementById('landing-page').style.display = 'block';
             document.getElementById('patient-dashboard').classList.remove('active');
@@ -1410,14 +1837,15 @@
             }
         }
 
-        // Modal Functions
+        // ========================================= 
+        //             MODAL FUNCTIONS               
+        // ========================================= 
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
             if (modalId === 'appointment') {
                 loadDoctors();
             } else if (modalId === 'new-record') {
                 loadPatientsForRecord();
-                // Set today's date as default
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('record-date').value = today;
             }
@@ -1439,7 +1867,62 @@
             }
         }
 
-        // Authentication Functions
+        // ========================================= 
+        //           AUTHENTICATION FUNCTIONS        
+        // ========================================= 
+        async function checkAuthSession() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) throw error;
+                
+                if (session) {
+                    console.log('Session found, loading user profile...');
+                    await loadUserFromSession(session.user);
+                }
+            } catch (error) {
+                console.error('Error checking session:', error);
+            }
+        }
+
+        async function loadUserFromSession(authUser) {
+            try {
+                // Try loading as patient
+                const { data: patient, error: patientError } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('email', authUser.email)
+                    .eq('status', 'active')
+                    .single();
+
+                if (patient) {
+                    currentUser = patient;
+                    userType = 'patient';
+                    showPatientDashboard();
+                    return;
+                }
+
+                // Try loading as doctor
+                const { data: doctor, error: doctorError } = await supabase
+                    .from('doctors')
+                    .select('*')
+                    .eq('email', authUser.email)
+                    .eq('status', 'active')
+                    .single();
+
+                if (doctor) {
+                    currentUser = doctor;
+                    userType = 'doctor';
+                    showDoctorDashboard();
+                    return;
+                }
+
+                console.log('User authenticated but no profile found');
+                
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
         async function loginPatient(event) {
             event.preventDefault();
             showLoading();
@@ -1449,31 +1932,49 @@
             const password = formData.get('password');
             
             try {
-                // Query patient with email
-                const { data: patients, error } = await supabase
+                console.log('Attempting patient login with:', email);
+                
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (authError) {
+                    console.error('Auth error:', authError);
+                    if (authError.message.includes('Invalid login credentials')) {
+                        throw new Error('Email o contraseña incorrectos. Verifica tus credenciales.');
+                    }
+                    throw authError;
+                }
+                
+                console.log('Auth successful, searching for patient profile...');
+                
+                const { data: patient, error: patientError } = await supabase
                     .from('patients')
                     .select('*')
                     .eq('email', email)
-                    .eq('status', 'active');
+                    .eq('status', 'active')
+                    .single();
                 
-                if (error) throw error;
-                
-                if (patients.length > 0) {
-                    // For demo purposes, accept any password for now
-                    // In production, you would verify the hashed password
-                    currentUser = patients[0];
-                    userType = 'patient';
-                    
-                    closeModal('patient-login');
-                    showPatientDashboard();
-                    showNotification('¡Bienvenido a tu portal de paciente!', 'success');
-                    event.target.reset();
-                } else {
-                    showNotification('Credenciales incorrectas. Verifica tu email y contraseña.', 'error');
+                if (patientError || !patient) {
+                    console.error('Patient profile error:', patientError);
+                    await supabase.auth.signOut();
+                    throw new Error('Este email no está registrado como paciente.');
                 }
+                
+                console.log('Patient found:', patient);
+                
+                currentUser = patient;
+                userType = 'patient';
+                
+                closeModal('patient-login');
+                showPatientDashboard();
+                showNotification(`¡Bienvenido ${patient.name}!`, 'success');
+                event.target.reset();
+                
             } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al iniciar sesión. Intenta nuevamente.', 'error');
+                console.error('Login error:', error);
+                showNotification(error.message || 'Error al iniciar sesión', 'error');
             } finally {
                 hideLoading();
             }
@@ -1488,30 +1989,49 @@
             const password = formData.get('password');
             
             try {
-                // Query doctor with email
-                const { data: doctors, error } = await supabase
+                console.log('Attempting doctor login with:', email);
+                
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (authError) {
+                    console.error('Doctor auth error:', authError);
+                    if (authError.message.includes('Invalid login credentials')) {
+                        throw new Error('Email o contraseña incorrectos. Verifica tus credenciales institucionales.');
+                    }
+                    throw authError;
+                }
+                
+                console.log('Doctor auth successful, searching for doctor profile...');
+                
+                const { data: doctor, error: doctorError } = await supabase
                     .from('doctors')
                     .select('*')
                     .eq('email', email)
-                    .eq('status', 'active');
+                    .eq('status', 'active')
+                    .single();
                 
-                if (error) throw error;
-                
-                if (doctors.length > 0) {
-                    // For demo purposes, accept any password for now
-                    currentUser = doctors[0];
-                    userType = 'doctor';
-                    
-                    closeModal('doctor-login');
-                    showDoctorDashboard();
-                    showNotification(`Bienvenida al sistema médico, ${doctors[0].name}`, 'success');
-                    event.target.reset();
-                } else {
-                    showNotification('Credenciales incorrectas. Verifica tu email institucional.', 'error');
+                if (doctorError || !doctor) {
+                    console.error('Doctor profile error:', doctorError);
+                    await supabase.auth.signOut();
+                    throw new Error('Este email no está registrado como médico en el sistema.');
                 }
+                
+                console.log('Doctor found:', doctor);
+                
+                currentUser = doctor;
+                userType = 'doctor';
+                
+                closeModal('doctor-login');
+                showDoctorDashboard();
+                showNotification(`Bienvenida al sistema, ${doctor.name}`, 'success');
+                event.target.reset();
+                
             } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al iniciar sesión. Intenta nuevamente.', 'error');
+                console.error('Doctor login error:', error);
+                showNotification(error.message || 'Error al iniciar sesión', 'error');
             } finally {
                 hideLoading();
             }
@@ -1522,58 +2042,95 @@
             showLoading();
             
             const formData = new FormData(event.target);
-            const patientData = {
-                email: formData.get('email'),
-                name: formData.get('name'),
-                phone: formData.get('phone'),
-                date_of_birth: formData.get('date_of_birth') || null,
-                gender: formData.get('gender') || null,
-                status: 'active'
-            };
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const name = formData.get('name');
+            const phone = formData.get('phone');
             
             try {
-                const { data, error } = await supabase
-                    .from('patients')
-                    .insert([patientData])
-                    .select();
+                // Create user in Supabase Auth
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            name: name,
+                            phone: phone,
+                            user_type: 'patient'
+                        }
+                    }
+                });
                 
-                if (error) {
-                    if (error.code === '23505') {
+                if (authError) {
+                    if (authError.message.includes('already registered')) {
                         throw new Error('Este email ya está registrado. Intenta iniciar sesión.');
                     }
-                    throw error;
+                    throw authError;
                 }
                 
-                currentUser = data[0];
-                userType = 'patient';
+                // Create patient profile
+                const patientData = {
+                    email: email,
+                    name: name,
+                    phone: phone,
+                    date_of_birth: formData.get('date_of_birth') || null,
+                    gender: formData.get('gender') || null,
+                    status: 'active'
+                };
+                
+                const { data: patient, error: patientError } = await supabase
+                    .from('patients')
+                    .insert([patientData])
+                    .select()
+                    .single();
+                
+                if (patientError) {
+                    console.error('Patient creation error:', patientError);
+                    throw patientError;
+                }
                 
                 closeModal('patient-register');
-                showPatientDashboard();
-                showNotification('¡Cuenta creada exitosamente! Bienvenido.', 'success');
+                showNotification('¡Cuenta creada exitosamente! Revisa tu email para confirmar.', 'success');
                 event.target.reset();
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Registration error:', error);
                 showNotification(error.message || 'Error al crear cuenta', 'error');
             } finally {
                 hideLoading();
             }
         }
 
-        function logout() {
-            currentUser = null;
-            userType = null;
-            showLandingPage();
-            showNotification('Has cerrado sesión correctamente', 'success');
+        async function logout() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                
+                currentUser = null;
+                userType = null;
+                
+                showLandingPage();
+                showNotification('Has cerrado sesión correctamente', 'success');
+                
+            } catch (error) {
+                console.error('Logout error:', error);
+                currentUser = null;
+                userType = null;
+                showLandingPage();
+                showNotification('Sesión cerrada', 'info');
+            }
         }
 
-        // Load Functions
+        // ========================================= 
+        //             LOAD FUNCTIONS                
+        // ========================================= 
         async function loadDoctors() {
             try {
                 const { data: doctors, error } = await supabase
                     .from('doctors')
                     .select('id, name, specialty')
-                    .eq('status', 'active');
+                    .eq('status', 'active')
+                    .order('name', { ascending: true });
                 
                 if (error) throw error;
                 
@@ -1599,7 +2156,6 @@
             document.getElementById('patient-name').textContent = `- ${currentUser.name}`;
             
             try {
-                // Load appointments
                 const { data: appointments, error } = await supabase
                     .from('appointments')
                     .select(`
@@ -1611,10 +2167,8 @@
                 
                 if (error) throw error;
                 
-                // Update appointments count
                 document.getElementById('patient-appointments-count').textContent = appointments.length;
                 
-                // Find next appointment
                 const today = new Date().toISOString().split('T')[0];
                 const nextAppointment = appointments.find(apt => 
                     apt.appointment_date >= today && apt.status !== 'cancelled'
@@ -1644,8 +2198,9 @@
             document.getElementById('doctor-name').textContent = `- ${currentUser.name}`;
             
             try {
-                // Load today's appointments
                 const today = new Date().toISOString().split('T')[0];
+                
+                // Load today's appointments
                 const { data: todayAppointments, error: todayError } = await supabase
                     .from('appointments')
                     .select('*')
@@ -1653,7 +2208,6 @@
                     .eq('appointment_date', today);
                 
                 if (todayError) throw todayError;
-                
                 document.getElementById('today-appointments-count').textContent = todayAppointments.length;
                 
                 // Load total active patients
@@ -1663,7 +2217,6 @@
                     .eq('status', 'active');
                 
                 if (patientsError) throw patientsError;
-                
                 document.getElementById('total-patients-count').textContent = allPatients.length;
                 
                 // Load week appointments
@@ -1676,736 +2229,4 @@
                     .from('appointments')
                     .select('*')
                     .eq('doctor_id', currentUser.id)
-                    .gte('appointment_date', startOfWeek.toISOString().split('T')[0])
-                    .lte('appointment_date', endOfWeek.toISOString().split('T')[0]);
-                
-                if (weekError) throw weekError;
-                
-                document.getElementById('week-appointments-count').textContent = weekAppointments.length;
-                
-            } catch (error) {
-                console.error('Error loading doctor data:', error);
-                showNotification('Error al cargar datos del médico', 'warning');
-            }
-        }
-
-        // Appointment Functions
-        async function scheduleAppointment(event) {
-            event.preventDefault();
-            showLoading();
-            
-            const formData = new FormData(event.target);
-            
-            // Check if user is logged in
-            if (!currentUser || userType !== 'patient') {
-                hideLoading();
-                showNotification('Debes registrarte e iniciar sesión como paciente para agendar citas', 'warning');
-                closeModal('appointment');
-                openModal('patient-register');
-                return;
-            }
-            
-            const appointmentData = {
-                patient_id: currentUser.id,
-                doctor_id: formData.get('doctor'),
-                appointment_date: formData.get('date'),
-                appointment_time: formData.get('time'),
-                type: formData.get('type'),
-                notes: formData.get('notes') || null,
-                status: 'pending'
-            };
-            
-            try {
-                const { data, error } = await supabase
-                    .from('appointments')
-                    .insert([appointmentData])
-                    .select();
-                
-                if (error) throw error;
-                
-                closeModal('appointment');
-                showNotification('¡Cita agendada exitosamente! Te contactaremos para confirmar.', 'success');
-                event.target.reset();
-                
-                // Reload patient data if on patient dashboard
-                if (userType === 'patient') {
-                    loadPatientData();
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al agendar cita. Intenta nuevamente.', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Utility Functions
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        }
-
-        function getStatusLabel(status) {
-            const labels = {
-                'pending': 'Pendiente',
-                'confirmed': 'Confirmada',
-                'completed': 'Completada',
-                'cancelled': 'Cancelada'
-            };
-            return labels[status] || status;
-        }
-
-        function getTypeLabel(type) {
-            const labels = {
-                'general': 'Consulta General',
-                'followup': 'Seguimiento',
-                'checkup': 'Chequeo Preventivo',
-                'chronic': 'Control Crónico'
-            };
-            return labels[type] || type;
-        }
-
-        // Doctor Functions - Real implementations
-        async function showTodayAppointments() {
-            if (!currentUser || userType !== 'doctor') return;
-            
-            openModal('today-appointments');
-            showLoading();
-            
-            try {
-                const today = new Date().toISOString().split('T')[0];
-                const { data: appointments, error } = await supabase
-                    .from('appointments')
-                    .select(`
-                        *,
-                        patients (name, phone, email)
-                    `)
-                    .eq('doctor_id', currentUser.id)
-                    .eq('appointment_date', today)
-                    .order('appointment_time', { ascending: true });
-                
-                if (error) throw error;
-                
-                const listContainer = document.getElementById('today-appointments-list');
-                
-                if (appointments.length === 0) {
-                    listContainer.innerHTML = `
-                        <div style="text-align: center; padding: 2rem;">
-                            <i class="fas fa-calendar-check" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
-                            <h3>No hay citas programadas para hoy</h3>
-                            <p>¡Perfecto! Puedes aprovechar para revisar expedientes o planificar.</p>
-                        </div>
-                    `;
-                } else {
-                    listContainer.innerHTML = `
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Hora</th>
-                                        <th>Paciente</th>
-                                        <th>Tipo</th>
-                                        <th>Estado</th>
-                                        <th>Contacto</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${appointments.map(apt => `
-                                        <tr>
-                                            <td><strong>${apt.appointment_time}</strong></td>
-                                            <td>${apt.patients.name}</td>
-                                            <td>${getTypeLabel(apt.type)}</td>
-                                            <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
-                                            <td>${apt.patients.phone}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al cargar agenda del día', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        async function showPatientsList() {
-            if (!currentUser || userType !== 'doctor') return;
-            
-            openModal('patients-list');
-            loadPatientsList();
-        }
-
-        async function loadPatientsList() {
-            showLoading();
-            
-            try {
-                // Get all patients (not just those with appointments)
-                const { data: allPatients, error: patientsError } = await supabase
-                    .from('patients')
-                    .select('*')
-                    .eq('status', 'active')
-                    .order('created_at', { ascending: false });
-                
-                if (patientsError) throw patientsError;
-                
-                const listContainer = document.getElementById('patients-list-content');
-                
-                if (allPatients.length === 0) {
-                    listContainer.innerHTML = `
-                        <div style="text-align: center; padding: 2rem;">
-                            <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
-                            <h3>Aún no hay pacientes registrados</h3>
-                            <p>Crea tu primer paciente usando el botón "Nuevo Paciente".</p>
-                        </div>
-                    `;
-                } else {
-                    // For each patient, check if they have appointments with this doctor
-                    const patientsWithInfo = await Promise.all(
-                        allPatients.map(async (patient) => {
-                            const { data: appointments } = await supabase
-                                .from('appointments')
-                                .select('id')
-                                .eq('patient_id', patient.id)
-                                .eq('doctor_id', currentUser.id);
-                            
-                            return {
-                                ...patient,
-                                hasAppointments: appointments && appointments.length > 0
-                            };
-                        })
-                    );
-                    
-                    listContainer.innerHTML = `
-                        <div class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Teléfono</th>
-                                        <th>Email</th>
-                                        <th>Edad</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${patientsWithInfo.map(patient => `
-                                        <tr>
-                                            <td><strong>${patient.name}</strong></td>
-                                            <td>${patient.phone}</td>
-                                            <td>${patient.email || 'No registrado'}</td>
-                                            <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
-                                            <td>
-                                                ${patient.hasAppointments 
-                                                    ? '<span class="status-badge status-confirmed">Con citas</span>' 
-                                                    : '<span class="status-badge status-pending">Sin citas</span>'
-                                                }
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-primary" onclick="createAppointmentForPatient('${patient.id}', '${patient.name}')" style="padding: 0.5rem; margin-right: 0.5rem;">
-                                                    <i class="fas fa-calendar-plus"></i>
-                                                </button>
-                                                <button class="btn btn-success" onclick="viewPatientHistory('${patient.id}')" style="padding: 0.5rem;">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al cargar lista de pacientes', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function searchPatients() {
-            const searchTerm = document.getElementById('patient-search').value.toLowerCase();
-            const rows = document.querySelectorAll('#patients-list-content tbody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        async function createNewPatient(event) {
-            event.preventDefault();
-            showLoading();
-            
-            const formData = new FormData(event.target);
-            const patientData = {
-                name: formData.get('name'),
-                email: formData.get('email') || null,
-                phone: formData.get('phone'),
-                date_of_birth: formData.get('date_of_birth') || null,
-                gender: formData.get('gender') || null,
-                address: formData.get('address') || null,
-                emergency_contact: formData.get('emergency_contact') || null,
-                status: 'active'
-            };
-            
-            try {
-                const { data, error } = await supabase
-                    .from('patients')
-                    .insert([patientData])
-                    .select();
-                
-                if (error) {
-                    if (error.code === '23505') {
-                        throw new Error('Este email ya está registrado');
-                    }
-                    throw error;
-                }
-                
-                closeModal('new-patient');
-                showNotification(`Paciente ${data[0].name} creado exitosamente`, 'success');
-                event.target.reset();
-                
-                // Reload doctor data and patients list
-                loadDoctorData();
-                
-                // If patients list modal is open, reload it
-                if (document.getElementById('patients-list').style.display === 'block') {
-                    loadPatientsList();
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification(error.message || 'Error al crear paciente', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function createAppointmentForPatient(patientId, patientName) {
-            closeModal('patients-list');
-            openModal('appointment');
-            
-            // Pre-select this patient if it's for a specific patient
-            // Note: The appointment modal is currently for patient self-booking
-            // In a real system, you'd have a doctor-specific appointment creation modal
-            showNotification(`Función pendiente: Crear cita para ${patientName}`, 'info');
-        }
-
-        async function createNewRecord(event) {
-            event.preventDefault();
-            showLoading();
-            
-            const formData = new FormData(event.target);
-            const recordData = {
-                patient_id: formData.get('patient_id'),
-                doctor_id: currentUser.id,
-                visit_date: formData.get('visit_date'),
-                chief_complaint: formData.get('chief_complaint'),
-                symptoms: formData.get('symptoms') || null,
-                diagnosis: formData.get('diagnosis') || null,
-                treatment_plan: formData.get('treatment_plan') || null,
-                prescriptions: formData.get('prescriptions') || null,
-                follow_up_date: formData.get('follow_up_date') || null,
-                notes: formData.get('notes') || null
-            };
-            
-            try {
-                const { data, error } = await supabase
-                    .from('medical_records')
-                    .insert([recordData])
-                    .select();
-                
-                if (error) throw error;
-                
-                closeModal('new-record');
-                showNotification('Consulta médica guardada exitosamente', 'success');
-                event.target.reset();
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al guardar consulta', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        async function loadPatientsForRecord() {
-            try {
-                // Load all active patients for medical records
-                const { data: allPatients, error } = await supabase
-                    .from('patients')
-                    .select('id, name')
-                    .eq('status', 'active')
-                    .order('name', { ascending: true });
-                
-                if (error) throw error;
-                
-                const selectElement = document.getElementById('record-patient');
-                selectElement.innerHTML = '<option value="">Seleccionar paciente</option>';
-                
-                allPatients.forEach(patient => {
-                    const option = document.createElement('option');
-                    option.value = patient.id;
-                    option.textContent = patient.name;
-                    selectElement.appendChild(option);
-                });
-                
-            } catch (error) {
-                console.error('Error loading patients for record:', error);
-                showNotification('Error al cargar pacientes', 'warning');
-            }
-        }
-
-        // Patient Functions - Real implementations
-        async function showPatientAppointments() {
-            if (!currentUser || userType !== 'patient') return;
-            
-            showLoading();
-            
-            try {
-                const { data: appointments, error } = await supabase
-                    .from('appointments')
-                    .select(`
-                        *,
-                        doctors (name, specialty)
-                    `)
-                    .eq('patient_id', currentUser.id)
-                    .order('appointment_date', { ascending: false });
-                
-                if (error) throw error;
-                
-                let message = `Tienes ${appointments.length} citas registradas:\n\n`;
-                
-                if (appointments.length === 0) {
-                    message = 'No tienes citas registradas aún.';
-                } else {
-                    appointments.slice(0, 5).forEach(apt => {
-                        message += `• ${formatDateShort(apt.appointment_date)} - ${apt.appointment_time}\n`;
-                        message += `  ${apt.doctors.name} (${getStatusLabel(apt.status)})\n\n`;
-                    });
-                    
-                    if (appointments.length > 5) {
-                        message += `... y ${appointments.length - 5} citas más.`;
-                    }
-                }
-                
-                showNotification(message, 'info');
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al cargar historial de citas', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        async function showMedicalRecords() {
-            if (!currentUser || userType !== 'patient') return;
-            
-            showLoading();
-            
-            try {
-                const { data: records, error } = await supabase
-                    .from('medical_records')
-                    .select(`
-                        *,
-                        doctors (name, specialty)
-                    `)
-                    .eq('patient_id', currentUser.id)
-                    .order('visit_date', { ascending: false });
-                
-                if (error) throw error;
-                
-                let message = `Tienes ${records.length} consultas en tu expediente:\n\n`;
-                
-                if (records.length === 0) {
-                    message = 'Tu expediente médico está vacío. Después de tu primera consulta aparecerá aquí.';
-                } else {
-                    records.slice(0, 3).forEach(record => {
-                        message += `• ${formatDateShort(record.visit_date)} - ${record.doctors.name}\n`;
-                        message += `  ${record.chief_complaint || 'Consulta general'}\n\n`;
-                    });
-                    
-                    if (records.length > 3) {
-                        message += `... y ${records.length - 3} consultas más.`;
-                    }
-                }
-                
-                showNotification(message, 'info');
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al cargar expediente médico', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        async function viewPatientHistory(patientId) {
-            openModal('patient-history');
-            showLoading();
-            
-            try {
-                // Load patient basic info
-                const { data: patient, error: patientError } = await supabase
-                    .from('patients')
-                    .select('*')
-                    .eq('id', patientId)
-                    .single();
-                
-                if (patientError) throw patientError;
-                
-                // Load patient appointments
-                const { data: appointments, error: appointmentsError } = await supabase
-                    .from('appointments')
-                    .select(`
-                        *,
-                        doctors (name, specialty)
-                    `)
-                    .eq('patient_id', patientId)
-                    .order('appointment_date', { ascending: false });
-                
-                if (appointmentsError) throw appointmentsError;
-                
-                // Load medical records
-                const { data: records, error: recordsError } = await supabase
-                    .from('medical_records')
-                    .select(`
-                        *,
-                        doctors (name, specialty)
-                    `)
-                    .eq('patient_id', patientId)
-                    .order('visit_date', { ascending: false });
-                
-                if (recordsError) throw recordsError;
-                
-                const historyContent = document.getElementById('patient-history-content');
-                historyContent.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2><i class="fas fa-user"></i> ${patient.name}</h2>
-                        <button class="btn btn-primary" onclick="addConsultationForPatient('${patient.id}', '${patient.name}')">
-                            <i class="fas fa-plus"></i> Nueva Consulta
-                        </button>
-                    </div>
-                    
-                    <!-- Patient Info -->
-                    <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
-                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
-                            <i class="fas fa-info-circle"></i> Información Personal
-                        </h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                            <div><strong>Teléfono:</strong> ${patient.phone}</div>
-                            <div><strong>Email:</strong> ${patient.email || 'No registrado'}</div>
-                            <div><strong>Fecha de Nacimiento:</strong> ${patient.date_of_birth || 'No registrada'}</div>
-                            <div><strong>Edad:</strong> ${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</div>
-                            <div><strong>Género:</strong> ${getGenderLabel(patient.gender)}</div>
-                            <div><strong>Registro:</strong> ${formatDate(patient.created_at)}</div>
-                        </div>
-                        ${patient.emergency_contact ? `
-                            <div style="margin-top: 1rem;">
-                                <strong>Contacto de Emergencia:</strong> ${patient.emergency_contact}
-                            </div>
-                        ` : ''}
-                        ${patient.address ? `
-                            <div style="margin-top: 1rem;">
-                                <strong>Dirección:</strong> ${patient.address}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <!-- Medical Records -->
-                    <div style="margin-bottom: 2rem;">
-                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
-                            <i class="fas fa-file-medical"></i> Expediente Médico (${records.length})
-                        </h3>
-                        ${records.length === 0 ? `
-                            <div style="text-align: center; padding: 2rem; background: var(--light-bg); border-radius: 10px;">
-                                <i class="fas fa-file-medical" style="font-size: 2rem; color: #ccc; margin-bottom: 1rem;"></i>
-                                <p>No hay consultas médicas registradas</p>
-                                <button class="btn btn-primary" onclick="addConsultationForPatient('${patient.id}', '${patient.name}')" style="margin-top: 1rem;">
-                                    <i class="fas fa-plus"></i> Primera Consulta
-                                </button>
-                            </div>
-                        ` : `
-                            <div class="table-container">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Médico</th>
-                                            <th>Motivo</th>
-                                            <th>Diagnóstico</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${records.map(record => `
-                                            <tr>
-                                                <td><strong>${formatDateShort(record.visit_date)}</strong></td>
-                                                <td>${record.doctors.name}</td>
-                                                <td>${record.chief_complaint || 'No especificado'}</td>
-                                                <td>${record.diagnosis || 'Pendiente'}</td>
-                                                <td>
-                                                    <button class="btn btn-primary" onclick="viewRecordDetail('${record.id}')" style="padding: 0.5rem;">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        `}
-                    </div>
-                    
-                    <!-- Appointments History -->
-                    <div>
-                        <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
-                            <i class="fas fa-calendar-alt"></i> Historial de Citas (${appointments.length})
-                        </h3>
-                        ${appointments.length === 0 ? `
-                            <div style="text-align: center; padding: 2rem; background: var(--light-bg); border-radius: 10px;">
-                                <i class="fas fa-calendar-alt" style="font-size: 2rem; color: #ccc; margin-bottom: 1rem;"></i>
-                                <p>No hay citas registradas</p>
-                            </div>
-                        ` : `
-                            <div class="table-container">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Hora</th>
-                                            <th>Médico</th>
-                                            <th>Tipo</th>
-                                            <th>Estado</th>
-                                            <th>Notas</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${appointments.map(apt => `
-                                            <tr>
-                                                <td><strong>${formatDateShort(apt.appointment_date)}</strong></td>
-                                                <td>${apt.appointment_time}</td>
-                                                <td>${apt.doctors.name}</td>
-                                                <td>${getTypeLabel(apt.type)}</td>
-                                                <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
-                                                <td>${apt.notes || '-'}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        `}
-                    </div>
-                `;
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al cargar historial del paciente', 'error');
-                document.getElementById('patient-history-content').innerHTML = `
-                    <div style="text-align: center; padding: 2rem;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--error); margin-bottom: 1rem;"></i>
-                        <h3>Error al cargar historial</h3>
-                        <p>No se pudo cargar la información del paciente</p>
-                    </div>
-                `;
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function addConsultationForPatient(patientId, patientName) {
-            closeModal('patient-history');
-            openModal('new-record');
-            
-            // Pre-select the patient
-            const patientSelect = document.getElementById('record-patient');
-            if (patientSelect) {
-                // Add the patient to the select if not already there
-                let optionExists = false;
-                for (let option of patientSelect.options) {
-                    if (option.value === patientId) {
-                        option.selected = true;
-                        optionExists = true;
-                        break;
-                    }
-                }
-                
-                if (!optionExists) {
-                    const option = document.createElement('option');
-                    option.value = patientId;
-                    option.textContent = patientName;
-                    option.selected = true;
-                    patientSelect.appendChild(option);
-                }
-            }
-        }
-
-        function viewRecordDetail(recordId) {
-            showNotification('Función en desarrollo: Ver detalle del expediente', 'info');
-        }
-
-        function addConsultationForPatient(patientId, patientName) {
-            closeModal('patient-history');
-            openModal('new-record');
-            
-            // Pre-select the patient
-            const patientSelect = document.getElementById('record-patient');
-            if (patientSelect) {
-                // Add the patient to the select if not already there
-                let optionExists = false;
-                for (let option of patientSelect.options) {
-                    if (option.value === patientId) {
-                        option.selected = true;
-                        optionExists = true;
-                        break;
-                    }
-                }
-                
-                if (!optionExists) {
-                    const option = document.createElement('option');
-                    option.value = patientId;
-                    option.textContent = patientName;
-                    option.selected = true;
-                    patientSelect.appendChild(option);
-                }
-            }
-        }
-
-        function viewRecordDetail(recordId) {
-            showNotification('Función en desarrollo: Ver detalle completo del expediente', 'info');
-        }
-
-        function calculateAge(birthDate) {
-            const today = new Date();
-            const birth = new Date(birthDate);
-            let age = today.getFullYear() - birth.getFullYear();
-            const monthDiff = today.getMonth() - birth.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-                age--;
-            }
-            
-            return age;
-        }
-    </script>
-</body>
-</html>
+                    .gte('appointment_date', startOfWeek.toISOString
