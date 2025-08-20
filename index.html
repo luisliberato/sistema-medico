@@ -2325,6 +2325,134 @@
         }
 
         console.log('TuCliniCard System initialized successfully');
+
+        javascript// Busca el final de tu JavaScript (antes de </script>) y agrega:
+
+async function showTodayAppointments() {
+    if (!currentUser || userType !== 'doctor') return;
+    
+    openModal('today-appointments');
+    showLoading();
+    
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const { data: appointments, error } = await supabase
+            .from('appointments')
+            .select(`
+                *,
+                patients (name, phone, email)
+            `)
+            .eq('doctor_id', currentUser.id)
+            .eq('appointment_date', today)
+            .order('appointment_time', { ascending: true });
+        
+        if (error) throw error;
+        
+        const listContainer = document.getElementById('today-appointments-list');
+        
+        if (appointments.length === 0) {
+            listContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-calendar-check" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                    <h3>No hay citas programadas para hoy</h3>
+                    <p>¡Perfecto! Puedes aprovechar para revisar expedientes.</p>
+                </div>
+            `;
+        } else {
+            listContainer.innerHTML = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${appointments.map(apt => `
+                                <tr>
+                                    <td><strong>${apt.appointment_time}</strong></td>
+                                    <td>${apt.patients?.name || 'Sin nombre'}</td>
+                                    <td>${apt.patients?.phone || 'Sin teléfono'}</td>
+                                    <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al cargar agenda del día', 'error');
+    } finally {
+        hideLoading();
+    }
+}
+
+async function showPatientsList() {
+    if (!currentUser || userType !== 'doctor') return;
+    
+    openModal('patients-list');
+    showLoading();
+    
+    try {
+        const { data: allPatients, error } = await supabase
+            .from('patients')
+            .select('*')
+            .eq('status', 'active')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const listContainer = document.getElementById('patients-list-content');
+        
+        if (allPatients.length === 0) {
+            listContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                    <h3>Aún no hay pacientes registrados</h3>
+                    <p>Crea tu primer paciente usando el botón "Nuevo Paciente".</p>
+                </div>
+            `;
+        } else {
+            listContainer.innerHTML = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Edad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${allPatients.map(patient => `
+                                <tr>
+                                    <td><strong>${patient.name}</strong></td>
+                                    <td>${patient.phone}</td>
+                                    <td>${patient.email || 'No registrado'}</td>
+                                    <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error al cargar lista de pacientes', 'error');
+    } finally {
+        hideLoading();
+    }
+}
           </script>
 </body>
 </html>
+
