@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultorio Médico Familiar - Sistema Completo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1e40af;
+            --secondary-teal: #0891b2;
+            --accent-green: #059669;
+            --text-gray: #374151;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --error: #dc2626;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-gray);
+            background: var(--light-bg);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Landing Page */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-teal) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary-blue);
+        }
+
+        .btn-white:hover {
+            background: var(--light-bg);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            margin-top: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--primary-blue);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            max-width: 300px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.info {
+            background: var(--primary-blue);
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background: var(--light-bg);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background: var(--light-bg);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-completed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-container {
+                padding: 1rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-user-md"></i>
+                Consultorio Médico Familiar
+            </div>
+            <ul class="nav-menu">
+                <li><a onclick="showLandingPage()">Inicio</a></li>
+                <li><a onclick="showDoctorsList()">Doctoras</a></li>
+                <li><a onclick="showServices()">Servicios</a></li>
+            </ul>
+            <div class="nav-buttons" id="nav-buttons">
+                <button class="btn btn-outline" onclick="openModal('patient-login')">
+                    <i class="fas fa-user"></i> Pacientes
+                </button>
+                <button class="btn btn-primary" onclick="openModal('doctor-login')">
+                    <i class="fas fa-user-md"></i> Médicos
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <!-- Landing Page -->
+        <div id="landing-page">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>Atención Médica de Confianza</h1>
+                    <p>Consultas presenciales y telemedicina con médicas especialistas. Tu salud es nuestra prioridad.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-hero btn-white" onclick="openModal('appointment')">
+                            <i class="fas fa-calendar-plus"></i> Agendar Cita
+                        </button>
+                        <button class="btn btn-hero btn-outline" onclick="openModal('patient-register')">
+                            <i class="fas fa-user-plus"></i> Registrarse
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Patient Dashboard -->
+        <div id="patient-dashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">
+                    <i class="fas fa-user"></i> Portal del Paciente
+                    <span id="patient-name" style="font-size: 1.2rem; font-weight: normal;"></span>
+                </h2>
+                <button class="btn btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-alt"></i> Próxima Cita
+                        </h3>
+                    </div>
+                    <div id="next-appointment">
+                        <p>No hay citas programadas</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('appointment')" style="margin-top: 1rem;">
+                        <i class="fas fa-plus"></i> Nueva Cita
+                    </button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-history"></i> Mis Citas
+                        </h3>
+                    </div>
+                    <div id="patient-appointments-count" class="stat-number">0</div>
+                    <div class="stat-label">citas totales</div>
+                    <button class="btn btn-primary" onclick="showPatientAppointments()" style="margin-top: 1rem;">
+                        <i class="fas fa-list"></i> Ver Historial
+                    </button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-medical"></i> Mi Expediente
+                        </h3>
+                    </div>
+                    <p>Accede a tu historial médico completo</p>
+                    <button class="btn btn-primary" onclick="showMedicalRecords()" style="margin-top: 1rem;">
+                        <i class="fas fa-eye"></i> Ver Expediente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Dashboard -->
+        <div id="doctor-dashboard" class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">
+                    <i class="fas fa-user-md"></i> Dashboard Médico
+                    <span id="doctor-name" style="font-size: 1.2rem; font-weight: normal;"></span>
+                </h2>
+                <button class="btn btn-outline" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-day"></i> Citas de Hoy
+                        </h3>
+                    </div>
+                    <div id="today-appointments-count" class="stat-number">0</div>
+                    <div class="stat-label">pacientes programados</div>
+                    <button class="btn btn-primary" onclick="showTodayAppointments()" style="margin-top: 1rem;">
+                        <i class="fas fa-list"></i> Ver Agenda
+                    </button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-users"></i> Mis Pacientes
+                        </h3>
+                    </div>
+                    <div id="total-patients-count" class="stat-number">0</div>
+                    <div class="stat-label">pacientes activos</div>
+                    <button class="btn btn-primary" onclick="showPatientsList()" style="margin-top: 1rem;">
+                        <i class="fas fa-search"></i> Gestionar Pacientes
+                    </button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line"></i> Esta Semana
+                        </h3>
+                    </div>
+                    <div id="week-appointments-count" class="stat-number">0</div>
+                    <div class="stat-label">citas programadas</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-bolt"></i> Acciones Rápidas
+                        </h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <button class="btn btn-success" onclick="openModal('new-patient')">
+                            <i class="fas fa-user-plus"></i> Nuevo Paciente
+                        </button>
+                        <button class="btn btn-primary" onclick="openModal('new-record')">
+                            <i class="fas fa-file-medical-alt"></i> Nueva Consulta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Patient Login Modal -->
+    <div id="patient-login" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('patient-login')">&times;</span>
+            <h2><i class="fas fa-user"></i> Portal del Paciente</h2>
+            <form id="patient-login-form" onsubmit="loginPatient(event)">
+                <div class="form-group">
+                    <label for="patient-email">Email:</label>
+                    <input type="email" id="patient-email" name="email" required placeholder="paciente@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="patient-password">Contraseña:</label>
+                    <input type="password" id="patient-password" name="password" required placeholder="paciente123">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="#" onclick="switchModal('patient-login', 'patient-register')" style="color: var(--primary-blue);">
+                        ¿No tienes cuenta? Regístrate aquí
+                    </a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Patient Register Modal -->
+    <div id="patient-register" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('patient-register')">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Registro de Paciente</h2>
+            <form id="patient-register-form" onsubmit="registerPatient(event)">
+                <div class="form-group">
+                    <label for="register-name">Nombre Completo:</label>
+                    <input type="text" id="register-name" name="name" required placeholder="Tu nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" name="email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Teléfono:</label>
+                    <input type="tel" id="register-phone" name="phone" required placeholder="(809) 555-0123">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Contraseña:</label>
+                    <input type="password" id="register-password" name="password" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group">
+                    <label for="register-birth">Fecha de Nacimiento:</label>
+                    <input type="date" id="register-birth" name="date_of_birth">
+                </div>
+                <div class="form-group">
+                    <label for="register-gender">Género:</label>
+                    <select id="register-gender" name="gender">
+                        <option value="">Seleccionar</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="Other">Otro</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Crear Cuenta
+                </button>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="#" onclick="switchModal('patient-register', 'patient-login')" style="color: var(--primary-blue);">
+                        ¿Ya tienes cuenta? Inicia sesión
+                    </a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctor Login Modal -->
+    <div id="doctor-login" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('doctor-login')">&times;</span>
+            <h2><i class="fas fa-user-md"></i> Acceso Médicos</h2>
+            <form id="doctor-login-form" onsubmit="loginDoctor(event)">
+                <div class="form-group">
+                    <label for="doctor-email">Email Institucional:</label>
+                    <input type="email" id="doctor-email" name="email" required placeholder="maria.garcia@clinica.com">
+                </div>
+                <div class="form-group">
+                    <label for="doctor-password">Contraseña:</label>
+                    <input type="password" id="doctor-password" name="password" required placeholder="doctor123">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Acceder al Sistema
+                </button>
+                <div style="margin-top: 1rem; padding: 1rem; background: #f0f8ff; border-radius: 8px; font-size: 0.9rem;">
+                    <strong>Credenciales de prueba:</strong><br>
+                    <code>maria.garcia@clinica.com</code> / <code>doctor123</code><br>
+                    <code>ana.rodriguez@clinica.com</code> / <code>doctor123</code>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div id="appointment" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('appointment')">&times;</span>
+            <h2><i class="fas fa-calendar-plus"></i> Agendar Cita</h2>
+            <form id="appointment-form" onsubmit="scheduleAppointment(event)">
+                <div class="form-group">
+                    <label for="appointment-doctor">Médico:</label>
+                    <select id="appointment-doctor" name="doctor" required>
+                        <option value="">Cargando médicos...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-date">Fecha:</label>
+                    <input type="date" id="appointment-date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-time">Hora:</label>
+                    <select id="appointment-time" name="time" required>
+                        <option value="">Seleccionar hora</option>
+                        <option value="08:00">8:00 AM</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-type">Tipo de Consulta:</label>
+                    <select id="appointment-type" name="type" required>
+                        <option value="">Seleccionar tipo</option>
+                        <option value="general">Consulta General</option>
+                        <option value="followup">Seguimiento</option>
+                        <option value="checkup">Chequeo Preventivo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointment-notes">Notas (opcional):</label>
+                    <textarea id="appointment-notes" name="notes" placeholder="Describe brevemente el motivo de la consulta..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-calendar-check"></i> Confirmar Cita
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ooacvnvxuvnhwodpqwoh.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYWN2bnZ4dXZuaHdvZHBxd29oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1ODQ2MDcsImV4cCI6MjA3MTE2MDYwN30.8GXjZfvKlPV-0v3vXglZsvke2U4gGgl4YVtwgfRNNVw';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global state
+        let currentUser = null;
+        let userType = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showLandingPage();
+            loadDoctors();
+            
+            // Set minimum date for appointments to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointment-date').setAttribute('min', today);
+        });
+
+        // Utility Functions
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Navigation Functions
+        function showLandingPage() {
+            document.getElementById('landing-page').style.display = 'block';
+            document.getElementById('patient-dashboard').classList.remove('active');
+            document.getElementById('doctor-dashboard').classList.remove('active');
+            updateNavButtons();
+        }
+
+        function showPatientDashboard() {
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('patient-dashboard').classList.add('active');
+            document.getElementById('doctor-dashboard').classList.remove('active');
+            updateNavButtons();
+            loadPatientData();
+        }
+
+        function showDoctorDashboard() {
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('patient-dashboard').classList.remove('active');
+            document.getElementById('doctor-dashboard').classList.add('active');
+            updateNavButtons();
+            loadDoctorData();
+        }
+
+        function updateNavButtons() {
+            const navButtons = document.getElementById('nav-buttons');
+            if (currentUser) {
+                navButtons.innerHTML = `
+                    <span style="color: var(--primary-blue); font-weight: 600;">
+                        <i class="fas fa-user"></i> ${currentUser.name}
+                    </span>
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Salir
+                    </button>
+                `;
+            } else {
+                navButtons.innerHTML = `
+                    <button class="btn btn-outline" onclick="openModal('patient-login')">
+                        <i class="fas fa-user"></i> Pacientes
+                    </button>
+                    <button class="btn btn-primary" onclick="openModal('doctor-login')">
+                        <i class="fas fa-user-md"></i> Médicos
+                    </button>
+                `;
+            }
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            if (modalId === 'appointment') {
+                loadDoctors();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function switchModal(fromModal, toModal) {
+            closeModal(fromModal);
+            openModal(toModal);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Authentication Functions
+        async function loginPatient(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            try {
+                // Query patient with email
+                const { data: patients, error } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('status', 'active');
+                
+                if (error) throw error;
+                
+                if (patients.length > 0) {
+                    // For demo purposes, accept any password for now
+                    // In production, you would verify the hashed password
+                    currentUser = patients[0];
+                    userType = 'patient';
+                    
+                    closeModal('patient-login');
+                    showPatientDashboard();
+                    showNotification('Bienvenido a tu portal de paciente', 'success');
+                    event.target.reset();
+                } else {
+                    showNotification('Credenciales incorrectas', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al iniciar sesión', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loginDoctor(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            try {
+                // Query doctor with email
+                const { data: doctors, error } = await supabase
+                    .from('doctors')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('status', 'active');
+                
+                if (error) throw error;
+                
+                if (doctors.length > 0) {
+                    // For demo purposes, accept any password for now
+                    currentUser = doctors[0];
+                    userType = 'doctor';
+                    
+                    closeModal('doctor-login');
+                    showDoctorDashboard();
+                    showNotification('Acceso autorizado al sistema médico', 'success');
+                    event.target.reset();
+                } else {
+                    showNotification('Credenciales incorrectas', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al iniciar sesión', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function registerPatient(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(event.target);
+            const patientData = {
+                email: formData.get('email'),
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                date_of_birth: formData.get('date_of_birth') || null,
+                gender: formData.get('gender') || null,
+                status: 'active'
+            };
+            
+            try {
+                const { data, error } = await supabase
+                    .from('patients')
+                    .insert([patientData])
+                    .select();
+                
+                if (error) {
+                    if (error.code === '23505') {
+                        throw new Error('Este email ya está registrado');
+                    }
+                    throw error;
+                }
+                
+                currentUser = data[0];
+                userType = 'patient';
+                
+                closeModal('patient-register');
+                showPatientDashboard();
+                showNotification('Cuenta creada exitosamente', 'success');
+                event.target.reset();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(error.message || 'Error al crear cuenta', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            userType = null;
+            showLandingPage();
+            showNotification('Sesión cerrada correctamente', 'success');
+        }
+
+        // Load Functions
+        async function loadDoctors() {
+            try {
+                const { data: doctors, error } = await supabase
+                    .from('doctors')
+                    .select('id, name, specialty')
+                    .eq('status', 'active');
+                
+                if (error) throw error;
+                
+                const selectElement = document.getElementById('appointment-doctor');
+                selectElement.innerHTML = '<option value="">Seleccionar médico</option>';
+                
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = `${doctor.name} - ${doctor.specialty}`;
+                    selectElement.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading doctors:', error);
+            }
+        }
+
+        async function loadPatientData() {
+            if (!currentUser || userType !== 'patient') return;
+            
+            document.getElementById('patient-name').textContent = `- ${currentUser.name}`;
+            
+            try {
+                // Load appointments
+                const { data: appointments, error } = await supabase
+                    .from('appointments')
+                    .select(`
+                        *,
+                        doctors (name, specialty)
+                    `)
+                    .eq('patient_id', currentUser.id)
+                    .order('appointment_date', { ascending: false });
+                
+                if (error) throw error;
+                
+                // Update appointments count
+                document.getElementById('patient-appointments-count').textContent = appointments.length;
+                
+                // Find next appointment
+                const today = new Date().toISOString().split('T')[0];
+                const nextAppointment = appointments.find(apt => 
+                    apt.appointment_date >= today && apt.status !== 'cancelled'
+                );
+                
+                const nextAppointmentDiv = document.getElementById('next-appointment');
+                if (nextAppointment) {
+                    nextAppointmentDiv.innerHTML = `
+                        <strong>${nextAppointment.doctors.name}</strong><br>
+                        ${formatDate(nextAppointment.appointment_date)}<br>
+                        ${nextAppointment.appointment_time} - ${getTypeLabel(nextAppointment.type)}
+                        <br><span class="status-badge status-${nextAppointment.status}">${getStatusLabel(nextAppointment.status)}</span>
+                    `;
+                } else {
+                    nextAppointmentDiv.innerHTML = '<p>No hay citas programadas</p>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading patient data:', error);
+            }
+        }
+
+        async function loadDoctorData() {
+            if (!currentUser || userType !== 'doctor') return;
+            
+            document.getElementById('doctor-name').textContent = `- ${currentUser.name}`;
+            
+            try {
+                // Load today's appointments
+                const today = new Date().toISOString().split('T')[0];
+                const { data: todayAppointments, error: todayError } = await supabase
+                    .from('appointments')
+                    .select('*')
+                    .eq('doctor_id', currentUser.id)
+                    .eq('appointment_date', today);
+                
+                if (todayError) throw todayError;
+                
+                document.getElementById('today-appointments-count').textContent = todayAppointments.length;
+                
+                // Load total patients
+                const { data: patients, error: patientsError } = await supabase
+                    .from('appointments')
+                    .select('patient_id')
+                    .eq('doctor_id', currentUser.id);
+                
+                if (patientsError) throw patientsError;
+                
+                const uniquePatients = new Set(patients.map(p => p.patient_id));
+                document.getElementById('total-patients-count').textContent = uniquePatients.size;
+                
+                // Load week appointments
+                const startOfWeek = new Date();
+                startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
+                
+                const { data: weekAppointments, error: weekError } = await supabase
+                    .from('appointments')
+                    .select('*')
+                    .eq('doctor_id', currentUser.id)
+                    .gte('appointment_date', startOfWeek.toISOString().split('T')[0])
+                    .lte('appointment_date', endOfWeek.toISOString().split('T')[0]);
+                
+                if (weekError) throw weekError;
+                
+                document.getElementById('week-appointments-count').textContent = weekAppointments.length;
+                
+            } catch (error) {
+                console.error('Error loading doctor data:', error);
+            }
+        }
+
+        // Appointment Functions
+        async function scheduleAppointment(event) {
+            event.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(event.target);
+            
+            // Check if user is logged in
+            if (!currentUser || userType !== 'patient') {
+                hideLoading();
+                showNotification('Debes iniciar sesión como paciente para agendar citas', 'error');
+                closeModal('appointment');
+                openModal('patient-login');
+                return;
+            }
+            
+            const appointmentData = {
+                patient_id: currentUser.id,
+                doctor_id: formData.get('doctor'),
+                appointment_date: formData.get('date'),
+                appointment_time: formData.get('time'),
+                type: formData.get('type'),
+                notes: formData.get('notes') || null,
+                status: 'pending'
+            };
+            
+            try {
+                const { data, error } = await supabase
+                    .from('appointments')
+                    .insert([appointmentData])
+                    .select();
+                
+                if (error) throw error;
+                
+                closeModal('appointment');
+                showNotification('Cita agendada exitosamente', 'success');
+                event.target.reset();
+                
+                // Reload patient data if on patient dashboard
+                if (userType === 'patient') {
+                    loadPatientData();
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error al agendar cita', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'pending': 'Pendiente',
+                'confirmed': 'Confirmada',
+                'completed': 'Completada',
+                'cancelled': 'Cancelada'
+            };
+            return labels[status] || status;
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                'general': 'Consulta General',
+                'followup': 'Seguimiento',
+                'checkup': 'Chequeo Preventivo'
+            };
+            return labels[type] || type;
+        }
+
+        // Placeholder functions for future features
+        function showPatientAppointments() {
+            showNotification('Función en desarrollo: Historial de citas', 'info');
+        }
+
+        function showMedicalRecords() {
+            showNotification('Función en desarrollo: Expediente médico', 'info');
+        }
+
+        function showTodayAppointments() {
+            showNotification('Función en desarrollo: Agenda del día', 'info');
+        }
+
+        function showPatientsList() {
+            showNotification('Función en desarrollo: Lista de pacientes', 'info');
+        }
+
+        function showDoctorsList() {
+            showNotification('Información: Dra. María García y Dra. Ana Rodríguez', 'info');
+        }
+
+        function showServices() {
+            showNotification('Servicios: Consulta General, Medicina Preventiva, Seguimiento Crónico', 'info');
+        }
+    </script>
+</body>
+</html>
