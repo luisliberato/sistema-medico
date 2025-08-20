@@ -2582,7 +2582,7 @@ async function showPatientsList() {
         modal.id = 'patients-list';
         modal.className = 'modal';
         modal.innerHTML = `
-            <div class="modal-content">
+            <div class="modal-content" style="max-width: 90vw; width: 1000px;">
                 <span class="close" onclick="closeModal('patients-list')">&times;</span>
                 <h2><i class="fas fa-users"></i> Mis Pacientes</h2>
                 <div class="form-group">
@@ -2615,28 +2615,40 @@ async function showPatientsList() {
                 <div style="text-align: center; padding: 2rem;">
                     <i class="fas fa-users" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
                     <h3>Aún no hay pacientes registrados</h3>
-                    <p>Usa "Nuevo Paciente" para agregar el primero.</p>
                 </div>
             `;
         } else {
             listContainer.innerHTML = `
-                <div class="table-container">
-                    <table class="table">
+                <div style="overflow-x: scroll; overflow-y: visible; width: 100%; border: 1px solid #e5e7eb; border-radius: 8px;">
+                    <table class="table" style="width: 900px; margin: 0;">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Teléfono</th>
-                                <th>Email</th>
-                                <th>Edad</th>
+                                <th style="width: 200px; padding: 0.75rem;">Nombre</th>
+                                <th style="width: 150px; padding: 0.75rem;">Teléfono</th>
+                                <th style="width: 200px; padding: 0.75rem;">Email</th>
+                                <th style="width: 100px; padding: 0.75rem;">Edad</th>
+                                <th style="width: 100px; padding: 0.75rem;">Estado</th>
+                                <th style="width: 150px; padding: 0.75rem;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${allPatients.map(patient => `
                                 <tr>
-                                    <td><strong>${patient.name}</strong></td>
-                                    <td>${patient.phone}</td>
-                                    <td>${patient.email || 'No registrado'}</td>
-                                    <td>${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
+                                    <td style="padding: 0.75rem;"><strong>${patient.name}</strong></td>
+                                    <td style="padding: 0.75rem;">${patient.phone}</td>
+                                    <td style="padding: 0.75rem;">${patient.email || 'No registrado'}</td>
+                                    <td style="padding: 0.75rem;">${patient.date_of_birth ? calculateAge(patient.date_of_birth) + ' años' : 'N/A'}</td>
+                                    <td style="padding: 0.75rem;">
+                                        <span class="status-badge status-confirmed" style="font-size: 0.7rem;">Activo</span>
+                                    </td>
+                                    <td style="padding: 0.75rem;">
+                                        <button class="btn btn-primary" onclick="viewPatientHistory('${patient.id}')" style="padding: 0.25rem 0.5rem; margin-right: 0.25rem; font-size: 0.7rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-success" onclick="createAppointmentForPatient('${patient.id}', '${patient.name}')" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;">
+                                            <i class="fas fa-calendar-plus"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -2648,12 +2660,10 @@ async function showPatientsList() {
     } catch (error) {
         console.error('Error:', error);
         showNotification('Error al cargar pacientes', 'error');
-        document.getElementById('patients-list-content').innerHTML = '<p>Error al cargar pacientes</p>';
     } finally {
         hideLoading();
     }
 }
-
 function searchPatients() {
     const searchTerm = document.getElementById('patient-search')?.value.toLowerCase() || '';
     const rows = document.querySelectorAll('#patients-list-content tbody tr');
